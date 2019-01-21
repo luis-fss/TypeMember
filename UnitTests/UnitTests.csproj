@@ -1,17 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.11.0\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CD59F6C9-F180-4B4E-9898-481F78C3E539}</ProjectGuid>
+    <ProjectGuid>{56661AD0-0068-4A2A-B1D7-1B1CA816E6D4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TypeMember</RootNamespace>
-    <AssemblyName>TypeMember</AssemblyName>
+    <RootNamespace>UnitTests</RootNamespace>
+    <AssemblyName>UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions, Version=5.6.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.5.6.0\lib\net47\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,29 +50,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TinyCache\AutoRenewingCacheItem.cs" />
-    <Compile Include="Util\BasePropertyPathVisitor.cs" />
-    <Compile Include="Util\Enums\EnumUtils.cs" />
-    <Compile Include="Util\Extencions.cs" />
-    <Compile Include="Guard\Guard.cs" />
-    <Compile Include="Guard\GuardExpression.cs" />
-    <Compile Include="TinyCache\IExpirable.cs" />
-    <Compile Include="Projections\ISimpleEquatable.cs" />
-    <Compile Include="TinyCache\Exceptions\ItemNotInCacheException.cs" />
-    <Compile Include="TinyCache\Exceptions\ItemTypeIncorrectException.cs" />
-    <Compile Include="TinyCache\ITinyCache.cs" />
-    <Compile Include="Exceptions\NoDefaultConstructorException.cs" />
-    <Compile Include="Util\ObjectFactory.cs" />
+    <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Exceptions\PropertyNotFoundException.cs" />
-    <Compile Include="Util\PropertyPathVisitor.cs" />
-    <Compile Include="Reflector.cs" />
-    <Compile Include="Util\Enums\StringValueAttribute.cs" />
-    <Compile Include="TinyCache\TimedCacheItem.cs" />
-    <Compile Include="TinyCache\TimedTinyCache.cs" />
-    <Compile Include="TinyCache\TinyCache.cs" />
-    <Compile Include="TinyCache\TinyCacheBase.cs" />
-    <Compile Include="Projections\TypePair.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.11.0\build\NUnit.props'))" />
+  </Target>
 </Project>
