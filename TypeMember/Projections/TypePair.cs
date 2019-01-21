@@ -2,7 +2,7 @@
 
 namespace TypeMember.Projections
 {
-    internal struct TypePair : IEquatable<TypePair>
+    public struct TypePair2 : IEquatable<TypePair2>
     {
         public Type SourceType { get; private set; }
 
@@ -10,7 +10,7 @@ namespace TypeMember.Projections
 
         private readonly string _simpleEquatableString;
 
-        public TypePair(Type sourceType, Type destinationType, ISimpleEquatable simpleEquatable = null)
+        public TypePair2(Type sourceType, Type destinationType, ISimpleEquatable simpleEquatable = null)
             : this()
         {
             SourceType = sourceType;
@@ -21,7 +21,7 @@ namespace TypeMember.Projections
 
         #region Equality members
 
-        public bool Equals(TypePair other)
+        public bool Equals(TypePair2 other)
         {
             return SourceType == other.SourceType
                    && DestinationType == other.DestinationType
@@ -31,7 +31,7 @@ namespace TypeMember.Projections
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is TypePair && Equals((TypePair)obj);
+            return obj is TypePair2 && Equals((TypePair2)obj);
         }
 
         public override int GetHashCode()

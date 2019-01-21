@@ -8,7 +8,7 @@ using System.Text;
 
 namespace TypeMember.Util
 {
-    abstract class BasePropertyPathVisitor : ExpressionVisitor
+    public abstract class BasePropertyPathVisitor : ExpressionVisitor
     {
         private readonly Stack<string> _stack;
         protected readonly Expression UnderlyingExpression;

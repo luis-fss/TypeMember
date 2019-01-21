@@ -50,12 +50,51 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GuardTests.cs" />
+    <Compile Include="ObjectFactoryTests.cs" />
+    <Compile Include="PropertyPathVisitorTests.cs" />
+    <Compile Include="ReflectorTests.cs" />
+    <Compile Include="StubEntities\Bar.cs" />
+    <Compile Include="StubEntities\Bee.cs" />
+    <Compile Include="StubEntities\Blog\Address.cs" />
+    <Compile Include="StubEntities\Blog\Autor.cs" />
+    <Compile Include="StubEntities\Blog\Blog.cs" />
+    <Compile Include="StubEntities\Blog\Comment.cs" />
+    <Compile Include="StubEntities\Blog\Member.cs" />
+    <Compile Include="StubEntities\Blog\Post.cs" />
+    <Compile Include="StubEntities\Blog\State.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Category.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Employee.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Customer.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\EmployeeTerritory.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Order.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\OrderDetail.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Product.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Region.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Shipper.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Supplier.cs" />
+    <Compile Include="StubEntities\ExampleWebApplication\Territory.cs" />
+    <Compile Include="StubEntities\Foo.cs" />
+    <Compile Include="StubEntities\Person.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TinyCache\TimedTinyCacheTests.cs" />
+    <Compile Include="TinyCache\TinyCacheTests.cs" />
+    <Compile Include="TinyCache\TinyCacheTestsBase.cs" />
+    <Compile Include="Util\HiResTimer.cs" />
+    <Compile Include="Util\HiResTimerValidator.cs" />
+    <Compile Include="Util\ObjectFiller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TypeMember\TypeMember.csproj">
+      <Project>{cd59f6c9-f180-4b4e-9898-481f78c3e539}</Project>
+      <Name>TypeMember</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

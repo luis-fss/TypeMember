@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace TypeMember.Util
 {
-    class PropertyPathVisitor : BasePropertyPathVisitor
+    public class PropertyPathVisitor : BasePropertyPathVisitor
     {
         public HashSet<string> Properties { get; private set; }
         private readonly bool _flag;

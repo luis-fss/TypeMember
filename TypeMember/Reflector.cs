@@ -487,10 +487,10 @@ namespace TypeMember
         private static HashSet<string> GetAllPropertiesPathsWithCache(Type type)
         {
             var getAllPropertiesPaths = Cache.GetOrSetItem("getAllPropertiesPathsCacheKey-{93e7c805-2277-4c03-a82b-e7a4b54c8e94}",
-                () => new ConcurrentDictionary<TypePair, HashSet<string>>());
+                () => new ConcurrentDictionary<Type, HashSet<string>>());
 
-            return getAllPropertiesPaths.GetOrAdd(new TypePair(type, type),
-                tp => GetAllPropertiesPathsWithoutCache(tp.SourceType, null));
+            return getAllPropertiesPaths.GetOrAdd(type,
+                tp => GetAllPropertiesPathsWithoutCache(tp, null));
         }
 
         private static HashSet<string> GetAllPropertiesPathsWithoutCache(Type objectType, string rootpath)
