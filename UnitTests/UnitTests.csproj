@@ -53,11 +53,12 @@
     <Compile Include="GuardTests.cs" />
     <Compile Include="ObjectFactoryTests.cs" />
     <Compile Include="PropertyPathVisitorTests.cs" />
+    <Compile Include="RavenDBPropertyPathTests.cs" />
     <Compile Include="ReflectorTests.cs" />
     <Compile Include="StubEntities\Bar.cs" />
     <Compile Include="StubEntities\Bee.cs" />
     <Compile Include="StubEntities\Blog\Address.cs" />
-    <Compile Include="StubEntities\Blog\Autor.cs" />
+    <Compile Include="StubEntities\Blog\Author.cs" />
     <Compile Include="StubEntities\Blog\Blog.cs" />
     <Compile Include="StubEntities\Blog\Comment.cs" />
     <Compile Include="StubEntities\Blog\Member.cs" />

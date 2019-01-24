@@ -8,7 +8,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using TypeMember.Exceptions;
-using TypeMember.Projections;
 using TypeMember.TinyCache;
 using TypeMember.Util;
 
@@ -26,16 +25,14 @@ namespace TypeMember
 
         #region Get Member Name
 
-        // ReSharper disable UnusedParameter.Global
         public static string GetMemberName<T>(this T instance, Expression<Func<T, object>> expression)
         {
             return GetMemberName(expression);
         }
-        // ReSharper restore UnusedParameter.Global
 
         public static List<string> GetMemberNames<T>(this T instance, params Expression<Func<T, object>>[] expressions)
         {
-            throw new NotImplementedException();
+            return expressions.Select(GetMemberName).ToList();
         }
 
         public static string GetMemberName<T>(Expression<Func<T, object>> expression)
@@ -43,12 +40,10 @@ namespace TypeMember
             return GetMemberName(expression.Body);
         }
 
-        // ReSharper disable UnusedParameter.Global
         public static string GetMemberName<T>(this T instance, Expression<Action<T>> expression)
         {
             return GetMemberName(expression);
         }
-        // ReSharper restore UnusedParameter.Global
 
         public static string GetMemberName<T>(Expression<Action<T>> expression)
         {
@@ -67,28 +62,24 @@ namespace TypeMember
             var memberExpression = expression as MemberExpression;
             if (memberExpression != null)
             {
-                // Reference type property or field
                 return memberExpression.Member.Name;
             }
 
             var methodCallExpression = expression as MethodCallExpression;
             if (methodCallExpression != null)
             {
-                // Reference type method
                 return methodCallExpression.Method.Name;
             }
 
             var unaryExpression = expression as UnaryExpression;
             if (unaryExpression != null)
             {
-                // Property, field of method returning value type
                 return GetMemberName(unaryExpression);
             }
 
             var lambdaExpression = expression as LambdaExpression;
             if (lambdaExpression != null)
             {
-                // LambdaExpression, just make a recursive call in it's body
                 return GetMemberName(lambdaExpression.Body);
             }
 
@@ -464,9 +455,9 @@ namespace TypeMember
             return expression.GetPropertyPath();
         }
 
-        public static string GetPropertyPath<T>(Expression<Func<T, object>> expression)
+        public static string GetPropertyPath<T>(Expression<Func<T, object>> expression, string collectionSuffix = null)
         {
-            return expression.GetPropertyPath();
+            return expression.GetPropertyPath(collectionSuffix);
         }
 
         public static HashSet<string> GetAllPropertiesPaths<T>()

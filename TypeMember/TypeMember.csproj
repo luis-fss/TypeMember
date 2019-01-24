@@ -48,7 +48,6 @@
     <Compile Include="Guard\Guard.cs" />
     <Compile Include="Guard\GuardExpression.cs" />
     <Compile Include="TinyCache\IExpirable.cs" />
-    <Compile Include="Projections\ISimpleEquatable.cs" />
     <Compile Include="TinyCache\Exceptions\ItemNotInCacheException.cs" />
     <Compile Include="TinyCache\Exceptions\ItemTypeIncorrectException.cs" />
     <Compile Include="TinyCache\ITinyCache.cs" />
@@ -63,7 +62,6 @@
     <Compile Include="TinyCache\TimedTinyCache.cs" />
     <Compile Include="TinyCache\TinyCache.cs" />
     <Compile Include="TinyCache\TinyCacheBase.cs" />
-    <Compile Include="Projections\TypePair.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

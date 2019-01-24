@@ -7,7 +7,10 @@ namespace TypeMember.Util
 {
     public class PropertyPathVisitor : BasePropertyPathVisitor
     {
+        public string CollectionSuffix { get; set; }
+
         public HashSet<string> Properties { get; private set; }
+
         private readonly bool _flag;
         private Type _underlyingRootType;
 
@@ -28,8 +31,7 @@ namespace TypeMember.Util
         {
             try
             {
-                var lambda = node as LambdaExpression;
-                if (lambda != null)
+                if (node is LambdaExpression lambda)
                 {
                     _underlyingRootType = _underlyingRootType ?? lambda.Parameters[0].Type;
                 }
@@ -37,7 +39,7 @@ namespace TypeMember.Util
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException(string.Format("This expression is not supported: {0}", UnderlyingExpression ?? node), ex);
+                throw new NotSupportedException($"This expression is not supported: {UnderlyingExpression ?? node}", ex);
             }
         }
 
@@ -56,7 +58,7 @@ namespace TypeMember.Util
                         var element = Properties.ElementAt(Properties.Count - 1);
                         if (_underlyingRootType != null && _underlyingRootType.IsValidPropertyPath(element) == false)
                         {
-                            propertyPath = string.Format("{0}.{1}", propertyPath, element);
+                            propertyPath = $"{propertyPath}{CollectionSuffix}.{element}";
                             Properties.Remove(element);
                         }
                         //else if (_underlyingRootType != null && _underlyingRootType.IsValidPropertyPath(propertyPath) == false)
