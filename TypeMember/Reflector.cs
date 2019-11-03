@@ -257,13 +257,12 @@ namespace TypeMember
             var split = propPath.Split('.');
 
             // Create the root of the expression, namely accessing an employee variable. Could be a Expression.Parameter too.
-            var baseExpr = Expression.Parameter(typeof(TSource), typeof(TSource).ToString());
+            var baseExpr = Expression.Parameter(typeof(TSource), typeof(TSource).Name.ToLowerInvariant());
 
             // Start at index 1, we've already processed index 0 (the root)
             var result = BuildAccessors(baseExpr, split, 0);
 
-            var memberExpression = result as MemberExpression;
-            if (memberExpression != null && memberExpression.Type != typeof(TProperty))
+            if (result is MemberExpression memberExpression && memberExpression.Type != typeof(TProperty) && typeof(TProperty) != typeof(object))
             {
                 result = Expression.Convert(result, typeof(TProperty));
             }
@@ -285,7 +284,7 @@ namespace TypeMember
                 {
                     var enumerableType = parent.Type.GetGenericArguments().Single(); // input eg: Employee.Orders (type IList<Order>), output: type Order
 
-                    var param = Expression.Parameter(enumerableType, enumerableType.ToString()); // declare parameter for the lambda expression of Orders.Select(x => x.OrderID)
+                    var param = Expression.Parameter(enumerableType, enumerableType.Name.ToLowerInvariant()); // declare parameter for the lambda expression of Orders.Select(x => x.OrderID)
 
                     var lambdaBody = BuildAccessors(param, properties, index); // Recurse to build the inside of the lambda, so x => x.OrderID. 
 

@@ -219,7 +219,7 @@ namespace UnitTests
             const string propPath = "Bar.Name";
             var propertyExpression = Reflector.GetPropertyExpression<Foo, string>(propPath);
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
-            Assert.AreEqual("UnitTests.StubEntities.Foo => UnitTests.StubEntities.Foo.Bar.Name", propertyExpression.ToString());
+            Assert.AreEqual("foo => foo.Bar.Name", propertyExpression.ToString());
         }
 
         [Test]
@@ -228,7 +228,7 @@ namespace UnitTests
             const string propPath = "Bar.Bee.UnitPrice";
             var propertyExpression = Reflector.GetPropertyExpression<Foo, decimal>(propPath);
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
-            Assert.AreEqual("UnitTests.StubEntities.Foo => UnitTests.StubEntities.Foo.Bar.Bee.UnitPrice", propertyExpression.ToString());
+            Assert.AreEqual("foo => foo.Bar.Bee.UnitPrice", propertyExpression.ToString());
         }
 
         [Test]
@@ -240,9 +240,7 @@ namespace UnitTests
             var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
 
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
-            propertyExpression.ToString().Should().Be(expected.ToString()
-                .Replace("employee", "UnitTests.StubEntities.ExampleWebApplication.Employee")
-                .Replace("order", "UnitTests.StubEntities.ExampleWebApplication.Order"));
+            propertyExpression.ToString().Should().Be(expected.ToString());
         }
 
         [Test]
@@ -253,9 +251,7 @@ namespace UnitTests
             const string propPath = "Orders.Customer.City";
             var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
-            propertyExpression.ToString().Should().Be(expected.ToString()
-                .Replace("employee", "UnitTests.StubEntities.ExampleWebApplication.Employee")
-                .Replace("order", "UnitTests.StubEntities.ExampleWebApplication.Order"));
+            propertyExpression.ToString().Should().Be(expected.ToString());
         }
 
         #region Get properties paths
@@ -303,5 +299,33 @@ namespace UnitTests
         }
 
         #endregion
+        
+        [Test]
+        public void get_property_expression_linq_compatible()
+        {
+            Expression<Func<Employee, object>> expected = employee => employee.City;
+
+            const string propPath = "City";
+            
+            var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
+
+            Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
+            
+            propertyExpression.ToString().Should().Be(expected.ToString());
+        }
+        
+        [Test]
+        public void get_property_expression_linq_compatible_2()
+        {
+            Expression<Func<Employee, string>> expected = employee => employee.City;
+
+            const string propPath = "City";
+            
+            var propertyExpression = Reflector.GetPropertyExpression<Employee, string>(propPath);
+
+            Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
+            
+            propertyExpression.ToString().Should().Be(expected.ToString());
+        }
     }
 }
