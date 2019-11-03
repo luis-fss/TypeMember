@@ -2,6 +2,17 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <PackageVersion>0.1.0</PackageVersion>
+        <Title>TypeMember</Title>
+        <Authors>Lukkian</Authors>
+        <PackageProjectUrl>https://github.com/Lukkian/TypeMember</PackageProjectUrl>
+        <PackageLicenseUrl></PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/Lukkian/TypeMember</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyVersion>0.1.0.0</AssemblyVersion>
+        <FileVersion>0.1.0.0</FileVersion>
+        <Description>This project is still in prototype phase and should not be used in any way.</Description>
+        <Copyright>2019 @ Lukkian</Copyright>
     </PropertyGroup>
 
 </Project>
