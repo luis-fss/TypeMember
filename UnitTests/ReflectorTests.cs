@@ -327,5 +327,17 @@ namespace UnitTests
             
             propertyExpression.ToString().Should().Be(expected.ToString());
         }
+
+        [Test]
+        public void get_property_expression_linq_compatible_3_value_types()
+        {
+            const string propPath = "EmployeeID";
+
+            var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
+
+            var propertyPath = Reflector.GetPropertyPath(propertyExpression);
+
+            propertyPath.Should().Be(propPath.Substring(propPath.IndexOf('.') + 1));
+        }
     }
 }

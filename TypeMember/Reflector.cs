@@ -262,7 +262,7 @@ namespace TypeMember
             // Start at index 1, we've already processed index 0 (the root)
             var result = BuildAccessors(baseExpr, split, 0);
 
-            if (result is MemberExpression memberExpression && memberExpression.Type != typeof(TProperty) && typeof(TProperty) != typeof(object))
+            if (result is MemberExpression memberExpression && memberExpression.Type != typeof(TProperty) && memberExpression.Type.IsValueType)
             {
                 result = Expression.Convert(result, typeof(TProperty));
             }
