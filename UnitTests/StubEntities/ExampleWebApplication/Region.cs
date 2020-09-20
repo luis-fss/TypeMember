@@ -2,17 +2,17 @@
 
 namespace UnitTests.StubEntities.ExampleWebApplication
 {
-    public class Region
+    public sealed class Region
     {
         public Region()
         {
             Territories = new List<Territory>();
         }
 
-        public virtual int RegionID { get; set; }
+        public int RegionId { get; set; }
 
-        public virtual IList<Territory> Territories { get; set; }
+        public IList<Territory> Territories { get; set; }
 
-        public virtual string RegionDescription { get; set; }
+        public string RegionDescription { get; set; }
     }
 }

@@ -1,36 +1,37 @@
 ﻿using System.Collections.Generic;
+// ReSharper disable InconsistentNaming
 
 namespace UnitTests.StubEntities.ExampleWebApplication
 {
-    public class Product
+    public sealed class Product
     {
-        public virtual string EntityProp { get; set; }
+        public string EntityProp { get; set; }
 
         public Product()
         {
             OrderDetails = new List<OrderDetail>();
         }
 
-        public virtual int ProductID { get; set; }
+        public int ProductId { get; set; }
 
-        public virtual string ProductName { get; set; }
+        public string ProductName { get; set; }
 
-        public virtual string QuantityPerUnit { get; set; }
+        public string QuantityPerUnit { get; set; }
 
-        public virtual decimal? UnitPrice { get; set; }
+        public decimal? UnitPrice { get; set; }
 
-        public virtual short? UnitsInStock { get; set; }
+        public short? UnitsInStock { get; set; }
 
-        public virtual short? Units_On_Order { get; set; }
+        public short? Units_On_Order { get; set; }
 
-        public virtual short? ReorderLevel { get; set; }
+        public short? ReorderLevel { get; set; }
 
-        public virtual bool Discontinued { get; set; }
+        public bool Discontinued { get; set; }
 
-        public virtual Supplier Supplier { get; set; }
+        public Supplier Supplier { get; set; }
 
-        public virtual Category Category { get; set; }
+        public Category Category { get; set; }
 
-        public virtual IList<OrderDetail> OrderDetails { get; set; }
+        public IList<OrderDetail> OrderDetails { get; set; }
     }
 }

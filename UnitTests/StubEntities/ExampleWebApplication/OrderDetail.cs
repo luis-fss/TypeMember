@@ -1,10 +1,11 @@
-﻿namespace UnitTests.StubEntities.ExampleWebApplication
+﻿// ReSharper disable NonReadonlyMemberInGetHashCode
+namespace UnitTests.StubEntities.ExampleWebApplication
 {
     public class OrderDetail
     {
-        public virtual int OrderID { get; set; }
+        public virtual int OrderId { get; set; }
 
-        public virtual int ProductID { get; set; }
+        public virtual int ProductId { get; set; }
 
         public virtual Order Order { get; set; }
 
@@ -26,7 +27,7 @@
             {
                 return true;
             }
-            return other.OrderID == this.OrderID && other.ProductID == this.ProductID && Equals(other.Order, this.Order) && Equals(other.Product, this.Product) && other.UnitPrice == this.UnitPrice && other.Quantity == this.Quantity && other.Discount.Equals(this.Discount);
+            return other.OrderId == OrderId && other.ProductId == ProductId && Equals(other.Order, Order) && Equals(other.Product, Product) && other.UnitPrice == UnitPrice && other.Quantity == Quantity && other.Discount.Equals(Discount);
         }
 
         public override bool Equals(object obj)
@@ -50,13 +51,13 @@
         {
             unchecked
             {
-                int result = this.OrderID;
-                result = (result * 397) ^ this.ProductID;
-                result = (result * 397) ^ (this.Order != null ? this.Order.GetHashCode() : 0);
-                result = (result * 397) ^ (this.Product != null ? this.Product.GetHashCode() : 0);
-                result = (result * 397) ^ this.UnitPrice.GetHashCode();
-                result = (result * 397) ^ this.Quantity.GetHashCode();
-                result = (result * 397) ^ this.Discount.GetHashCode();
+                int result = OrderId;
+                result = (result * 397) ^ ProductId;
+                result = (result * 397) ^ (Order != null ? Order.GetHashCode() : 0);
+                result = (result * 397) ^ (Product != null ? Product.GetHashCode() : 0);
+                result = (result * 397) ^ UnitPrice.GetHashCode();
+                result = (result * 397) ^ Quantity.GetHashCode();
+                result = (result * 397) ^ Discount.GetHashCode();
                 return result;
             }
         }

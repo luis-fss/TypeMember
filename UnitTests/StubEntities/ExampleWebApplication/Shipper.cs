@@ -2,19 +2,19 @@
 
 namespace UnitTests.StubEntities.ExampleWebApplication
 {
-    public class Shipper
+    public sealed class Shipper
     {
         public Shipper()
         {
             Orders = new List<Order>();
         }
 
-        public virtual int ShipperID { get; set; }
+        public int ShipperId { get; set; }
 
-        public virtual string CompanyName { get; set; }
+        public string CompanyName { get; set; }
 
-        public virtual string Phone { get; set; }
+        public string Phone { get; set; }
 
-        public virtual IList<Order> Orders { get; set; }
+        public IList<Order> Orders { get; set; }
     }
 }

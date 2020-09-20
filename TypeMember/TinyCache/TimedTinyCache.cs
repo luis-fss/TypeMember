@@ -10,18 +10,18 @@ namespace TypeMember.TinyCache
     {
         private readonly TinyCache<TKey> _cache;
         private readonly Timer _checkItemExpirationTimer;
-        public int DefaultItemLifespanMilliseconds { get; private set; }
-        public int CheckItemExpirationIntervalMilliseconds { get; private set; }
+        public int DefaultItemLifespanMilliseconds { get; }
+        public int CheckItemExpirationIntervalMilliseconds { get; }
 
         public TimedTinyCache(int defaultItemLifespanMilliseconds, int checkItemExpirationIntervalMilliseconds)
         {
             if (defaultItemLifespanMilliseconds <= 0)
             {
-                throw new ArgumentOutOfRangeException("defaultItemLifespanMilliseconds", "defaultItemLifespanMilliseconds must have a positive value");
+                throw new ArgumentOutOfRangeException(nameof(defaultItemLifespanMilliseconds), "defaultItemLifespanMilliseconds must have a positive value");
             }
             if (checkItemExpirationIntervalMilliseconds <= 0)
             {
-                throw new ArgumentOutOfRangeException("checkItemExpirationIntervalMilliseconds", "checkItemExpirationIntervalMilliseconds must have a positive value");
+                throw new ArgumentOutOfRangeException(nameof(checkItemExpirationIntervalMilliseconds), "checkItemExpirationIntervalMilliseconds must have a positive value");
             }
             DefaultItemLifespanMilliseconds = defaultItemLifespanMilliseconds;
             CheckItemExpirationIntervalMilliseconds = checkItemExpirationIntervalMilliseconds;
@@ -34,11 +34,7 @@ namespace TypeMember.TinyCache
             lock (this)
             {
                 var keysToRemove = _cache.Items
-                    .Where(kvp =>
-                    {
-                        var expirable = kvp.Value as IExpirable;
-                        return expirable == null || expirable.HasExpired;
-                    })
+                    .Where(kvp => !(kvp.Value is IExpirable expirable) || expirable.HasExpired)
                     .Select(kvp => kvp.Key);
                 foreach (var key in keysToRemove)
                 {
@@ -52,11 +48,11 @@ namespace TypeMember.TinyCache
             get
             {
                 CheckItemExpiration(null);
-                return _cache.Items.Select(kvp =>
-                {
-                    var timedCacheItem = kvp.Value as TimedCacheItem<object>;
-                    return timedCacheItem != null ? new KeyValuePair<TKey, object>(kvp.Key, timedCacheItem.Item) : default(KeyValuePair<TKey, object>);
-                });
+                return _cache.Items
+                    .Select(kvp => 
+                        kvp.Value is TimedCacheItem<object> timedCacheItem 
+                            ? new KeyValuePair<TKey, object>(kvp.Key, timedCacheItem.Item)
+                            : default);
             }
         }
 
@@ -132,7 +128,7 @@ namespace TypeMember.TinyCache
         {
             if ((lifespanMilliseconds ?? 1) <= 0)
             {
-                throw new ArgumentOutOfRangeException("lifespanMilliseconds", "lifespanMilliseconds must have a positive value");
+                throw new ArgumentOutOfRangeException(nameof(lifespanMilliseconds), "lifespanMilliseconds must have a positive value");
             }
             var item = autoRenew
                 ? new AutoRenewingCacheItem<TItem>(currentItem == null ? itemFunc() : currentItem.Item, lifespanMilliseconds ?? DefaultItemLifespanMilliseconds, itemFunc)

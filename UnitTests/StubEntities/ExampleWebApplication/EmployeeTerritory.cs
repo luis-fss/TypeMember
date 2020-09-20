@@ -1,10 +1,11 @@
-﻿namespace UnitTests.StubEntities.ExampleWebApplication
+﻿// ReSharper disable NonReadonlyMemberInGetHashCode
+namespace UnitTests.StubEntities.ExampleWebApplication
 {
     public class EmployeeTerritory
     {
-        public virtual int EmployeeID { get; set; }
+        public virtual int EmployeeId { get; set; }
 
-        public virtual string TerritoryID { get; set; }
+        public virtual string TerritoryId { get; set; }
 
         public virtual Employee Employee { get; set; }
 
@@ -42,18 +43,18 @@
                 return true;
             }
 
-            return other.EmployeeID == this.EmployeeID && Equals(other.TerritoryID, this.TerritoryID)
-                                                       && Equals(other.Employee, this.Employee) && Equals(other.Territory, this.Territory);
+            return other.EmployeeId == EmployeeId && Equals(other.TerritoryId, TerritoryId)
+                                                  && Equals(other.Employee, Employee) && Equals(other.Territory, Territory);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                int result = this.EmployeeID;
-                result = (result * 397) ^ (this.TerritoryID != null ? this.TerritoryID.GetHashCode() : 0);
-                result = (result * 397) ^ (this.Employee != null ? this.Employee.GetHashCode() : 0);
-                result = (result * 397) ^ (this.Territory != null ? this.Territory.GetHashCode() : 0);
+                int result = EmployeeId;
+                result = (result * 397) ^ (TerritoryId != null ? TerritoryId.GetHashCode() : 0);
+                result = (result * 397) ^ (Employee != null ? Employee.GetHashCode() : 0);
+                result = (result * 397) ^ (Territory != null ? Territory.GetHashCode() : 0);
                 return result;
             }
         }

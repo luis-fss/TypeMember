@@ -5,7 +5,7 @@ namespace TypeMember.TinyCache
     class AutoRenewingCacheItem<TItem> : TimedCacheItem<TItem>
     {
         private readonly Func<TItem> _renewalFunction;
-        public override bool HasExpired { get { return false; } }
+        public override bool HasExpired => false;
 
         public AutoRenewingCacheItem(TItem item, int lifespanMilliseconds, Func<TItem> renewalFunction)
             : base(item, lifespanMilliseconds)
@@ -24,10 +24,7 @@ namespace TypeMember.TinyCache
                 }
                 return base.Item;
             }
-            protected set
-            {
-                base.Item = value;
-            }
+            protected set => base.Item = value;
         }
     }
 }

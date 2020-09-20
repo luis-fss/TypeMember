@@ -28,17 +28,17 @@ namespace TypeMember.Guard
 
                 if (args.Length > 0)
                 {
-                    var argse = new Expression[args.Length];
+                    var argsEx = new Expression[args.Length];
                     var parameterTypes = new Type[args.Length];
 
                     for (var i = 0; i < args.Length; i++)
                     {
-                        argse[i] = Expression.Constant(args[i]);
+                        argsEx[i] = Expression.Constant(args[i]);
                         parameterTypes[i] = args[i].GetType();
                     }
 
                     ctor = ObjectFactory.GetConstructor<TException>(parameterTypes);
-                    ctorExpression = Expression.New(ctor, argse);
+                    ctorExpression = Expression.New(ctor, argsEx);
                 }
                 else
                 {

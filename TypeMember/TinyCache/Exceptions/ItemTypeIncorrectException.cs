@@ -12,8 +12,8 @@ namespace TypeMember.TinyCache.Exceptions
             ActualType = actualType;
         }
 
-        public object Key { get; private set; }
-        public Type RequestedType { get; private set; }
-        public Type ActualType { get; private set; }
+        public object Key { get; }
+        public Type RequestedType { get; }
+        public Type ActualType { get; }
     }
 }

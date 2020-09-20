@@ -7,7 +7,7 @@
         //    Products = new List<Product>();
         //}
 
-        public virtual int SupplierID { get; set; }
+        public virtual int SupplierId { get; set; }
 
         public virtual string CompanyName { get; set; }
 

@@ -10,6 +10,6 @@ namespace TypeMember.TinyCache.Exceptions
             Key = key;
         }
 
-        public object Key { get; private set; }
+        public object Key { get; }
     }
 }

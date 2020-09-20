@@ -38,7 +38,7 @@ namespace TypeMember.Util
             {
                 var success = source.HydrateProperty(propertiesPath);
                 if (success == false)
-                    throw new Exception(string.Format("Could not hydrate property {0} of type {1}", propertiesPath, typeof(T)));
+                    throw new Exception($"Could not hydrate property {propertiesPath} of type {typeof(T)}");
             }
 
             return source;
@@ -70,9 +70,9 @@ namespace TypeMember.Util
         {
             var type = typeof(T);
 
-            Func<T> func = () => Activator.CreateInstance(type, true) as T;
+            T Func() => Activator.CreateInstance(type, true) as T;
 
-            return func;
+            return Func;
         }
 
         private static Func<T> CreateUsingLambdas()

@@ -59,26 +59,22 @@ namespace TypeMember
         {
             Guard.Guard.IsNotNull(() => expression);
 
-            var memberExpression = expression as MemberExpression;
-            if (memberExpression != null)
+            if (expression is MemberExpression memberExpression)
             {
                 return memberExpression.Member.Name;
             }
 
-            var methodCallExpression = expression as MethodCallExpression;
-            if (methodCallExpression != null)
+            if (expression is MethodCallExpression methodCallExpression)
             {
                 return methodCallExpression.Method.Name;
             }
 
-            var unaryExpression = expression as UnaryExpression;
-            if (unaryExpression != null)
+            if (expression is UnaryExpression unaryExpression)
             {
                 return GetMemberName(unaryExpression);
             }
 
-            var lambdaExpression = expression as LambdaExpression;
-            if (lambdaExpression != null)
+            if (expression is LambdaExpression lambdaExpression)
             {
                 return GetMemberName(lambdaExpression.Body);
             }
@@ -90,16 +86,13 @@ namespace TypeMember
         {
             Guard.Guard.IsNotNull(() => expression);
 
-            var methodExpression = expression.Operand as MethodCallExpression;
-            if (methodExpression != null)
+            if (expression.Operand is MethodCallExpression methodExpression)
                 return methodExpression.Method.Name;
 
-            var memberExpression = expression.Operand as MemberExpression;
-            if (memberExpression != null)
+            if (expression.Operand is MemberExpression memberExpression)
                 return memberExpression.Member.Name;
 
-            var constantExpression = expression.Operand as ConstantExpression;
-            if (constantExpression != null)
+            if (expression.Operand is ConstantExpression constantExpression)
                 return constantExpression.Value.ToString();
 
             throw new ArgumentException("Invalid expression");
@@ -118,17 +111,17 @@ namespace TypeMember
 
             if (parts.Length > 1)
             {
-                Func<Type, MemberInfo> func = innerType => GetMemberInfo(innerType, parts.Skip(1).Aggregate((a, i) => a + "." + i));
+                MemberInfo Func(Type innerType) => GetMemberInfo(innerType, parts.Skip(1).Aggregate((a, i) => a + "." + i));
 
                 var propertyInfo = type.GetProperty(parts[0], DefaultBindings);
                 if (propertyInfo != null)
                 {
                     var t = ExtractUnderlyingTypeFromGenericEnumerable(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-                    return func(t);
+                    return Func(t);
                 }
 
                 var memberInfo = type.GetField(parts[0], DefaultBindings);
-                return memberInfo != null ? func(memberInfo.FieldType) : null;
+                return memberInfo != null ? Func(memberInfo.FieldType) : null;
             }
 
             return (MemberInfo)type.GetProperty(propertyName, DefaultBindings) ?? type.GetField(propertyName, DefaultBindings);
@@ -166,7 +159,7 @@ namespace TypeMember
                         break;
 
                     default:
-                        throw new NotSupportedException(string.Format("This expression is not supported: {0}", expression));
+                        throw new NotSupportedException($"This expression is not supported: {expression}");
                 }
             }
         }
@@ -245,9 +238,9 @@ namespace TypeMember
                 new[] { typeof(string) },
                 null);
 
-            var genericMethod = method.MakeGenericMethod(typeof(TSource), propType);
+            var genericMethod = method?.MakeGenericMethod(typeof(TSource), propType);
 
-            var lambdaExpression = genericMethod.Invoke(null, new object[] { /*typeof(TSource).Name + "." +*/ propName }) as LambdaExpression;
+            var lambdaExpression = genericMethod?.Invoke(null, new object[] { /*typeof(TSource).Name + "." +*/ propName }) as LambdaExpression;
 
             return lambdaExpression;
         }
@@ -292,7 +285,7 @@ namespace TypeMember
 
                     var lambda = Expression.Lambda(funcType, lambdaBody, param);
 
-                    // This part is messy, I want to find the method Enumerable.Select<Order, int>(..) but I don't think there's a more succint way. Might be wrong.
+                    // This part is messy, I want to find the method Enumerable.Select<Order, int>(..) but I don't think there's a more succinct way. Might be wrong.
                     var selectMethod = (from m in typeof(Enumerable).GetMethods()
                         where m.Name == "Select"
                               && m.IsGenericMethod
@@ -314,7 +307,7 @@ namespace TypeMember
                 return BuildAccessors(newParent, properties, ++index);
             }
 
-            // Return the final expression once we're done recursing.
+            // Return the final expression once we're done recurring.
             return parent;
         }
 
@@ -345,7 +338,7 @@ namespace TypeMember
             // checking properties on conversionType below.
             if (conversionType == null)
             {
-                throw new ArgumentNullException("conversionType");
+                throw new ArgumentNullException(nameof(conversionType));
             }
 
             // If it's not a nullable type, just pass through the parameters to Convert.ChangeType
@@ -371,9 +364,9 @@ namespace TypeMember
 
             if (IsNumeric(conversionType))
             {
-                if (value is string)
+                if (value is string val)
                 {
-                    value = Convert.ToDouble((string)value, cultureInfo);
+                    value = Convert.ToDouble(val, cultureInfo);
                 }
                 else
                 {
@@ -385,6 +378,7 @@ namespace TypeMember
 
             // Now that we've guaranteed conversionType is something Convert.ChangeType can handle (i.e. not a
             // nullable type), pass the call on to Convert.ChangeType
+            // ReSharper disable once AssignNullToNotNullAttribute
             return Convert.ChangeType(value, conversionType);
         }
 
@@ -405,7 +399,7 @@ namespace TypeMember
 
         public static bool IsNumeric(object obj)
         {
-            return (obj != null) && IsNumeric(obj.GetType());
+            return obj != null && IsNumeric(obj.GetType());
         }
 
         public static bool IsNumeric(Type type)
@@ -483,10 +477,10 @@ namespace TypeMember
                 tp => GetAllPropertiesPathsWithoutCache(tp, null));
         }
 
-        private static HashSet<string> GetAllPropertiesPathsWithoutCache(Type objectType, string rootpath)
+        private static HashSet<string> GetAllPropertiesPathsWithoutCache(Type objectType, string rootPath)
         {
-            if (!string.IsNullOrWhiteSpace(rootpath) && rootpath.StartsWith("."))
-                rootpath = rootpath.Substring(1);
+            if (!string.IsNullOrWhiteSpace(rootPath) && rootPath.StartsWith("."))
+                rootPath = rootPath.Substring(1);
 
             var dicProperties = new HashSet<string>();
             var properties = objectType.GetProperties();
@@ -498,13 +492,13 @@ namespace TypeMember
                     property.PropertyType.Module.Name.Equals("mscorlib.dll") ||
                     property.PropertyType == typeof(string))
                 {
-                    var path = string.IsNullOrWhiteSpace(rootpath)
+                    var path = string.IsNullOrWhiteSpace(rootPath)
                         ? property.Name
-                        : string.Format("{0}.{1}", rootpath, property.Name);
+                        : $"{rootPath}.{property.Name}";
                     dicProperties.Add(path);
                 }
                 else
-                    dicProperties.UnionWith(GetAllPropertiesPathsWithoutCache(val, string.Format("{0}.{1}", rootpath, property.Name)));
+                    dicProperties.UnionWith(GetAllPropertiesPathsWithoutCache(val, $"{rootPath}.{property.Name}"));
             }
 
             return dicProperties;
@@ -544,7 +538,7 @@ namespace TypeMember
         public static object GetPropertyValue(object source, string propertyPath)
         {
             var reflectorResult = GetReflectorResult(source, propertyPath, true, false);
-            return reflectorResult != null ? reflectorResult.Value : null;
+            return reflectorResult?.Value;
         }
 
         /// <summary>
@@ -830,8 +824,7 @@ namespace TypeMember
 
         public static Type GetMemberType(Expression expression)
         {
-            var lambdaExpression = expression as LambdaExpression;
-            if (lambdaExpression != null)
+            if (expression is LambdaExpression lambdaExpression)
             {
                 var memberInfo = GetMemberInfo(lambdaExpression);
                 return GetMemberType(memberInfo);

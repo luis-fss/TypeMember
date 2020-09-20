@@ -6,7 +6,7 @@ using TypeMember.Util.Enums;
 
 namespace TypeMember.Util
 {
-    public static class Extencions
+    public static class Extensions
     {
         public static bool IsNotNullOrWhiteSpace(this string str)
         {
@@ -39,8 +39,7 @@ namespace TypeMember.Util
             if (expression == null)
                 return null;
 
-            var visitor = new PropertyPathVisitor();
-            visitor.CollectionSuffix = collectionSuffix;
+            var visitor = new PropertyPathVisitor { CollectionSuffix = collectionSuffix };
             visitor.Visit(expression);
             return visitor.Properties;
         }

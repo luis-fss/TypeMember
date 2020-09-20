@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+// ReSharper disable UnusedMember.Local
 
 namespace UnitTests.Util
 {

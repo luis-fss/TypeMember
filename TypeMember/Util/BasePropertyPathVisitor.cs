@@ -42,8 +42,7 @@ namespace TypeMember.Util
 
         protected override Expression VisitMember(MemberExpression expression)
         {
-            if (_stack != null)
-                _stack.Push(expression.Member.Name);
+            _stack?.Push(expression.Member.Name);
             return base.VisitMember(expression);
         }
 

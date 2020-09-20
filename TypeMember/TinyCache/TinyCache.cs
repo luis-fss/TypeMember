@@ -14,13 +14,7 @@ namespace TypeMember.TinyCache
             _cache = new ConcurrentDictionary<TKey, object>();
         }
 
-        public override IEnumerable<KeyValuePair<TKey, object>> Items
-        {
-            get
-            {
-                return _cache.ToList();
-            }
-        }
+        public override IEnumerable<KeyValuePair<TKey, object>> Items => _cache.ToList();
 
         public override bool IsItemCached(TKey key)
         {
@@ -32,9 +26,9 @@ namespace TypeMember.TinyCache
             if (IsItemCached(key))
             {
                 var item = _cache[key];
-                if (item is TItem)
+                if (item is TItem tItem)
                 {
-                    return (TItem)item;
+                    return tItem;
                 }
                 throw new ItemTypeIncorrectException(key, typeof(TItem), item.GetType());
             }
@@ -55,8 +49,7 @@ namespace TypeMember.TinyCache
 
         public override bool RemoveItem(TKey key)
         {
-            object obj;
-            return RemoveItem(key, out obj);
+            return RemoveItem(key, out _);
         }
 
         public override bool RemoveItem(TKey key, out object item)

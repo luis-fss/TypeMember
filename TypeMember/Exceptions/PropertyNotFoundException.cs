@@ -17,7 +17,7 @@ namespace TypeMember.Exceptions
         /// <param name="targetType">The <see cref="T:System.Type"/> that is missing the property</param>
         /// <param name="propertyName">The name of the missing property</param>
         public PropertyNotFoundException(Type targetType, string propertyName)
-            : base(string.Format("Could not find property nor field '{0}' in class '{1}'", propertyName, targetType))
+            : base($"Could not find property nor field '{propertyName}' in class '{targetType}'")
         {
             TargetType = targetType;
             PropertyName = propertyName;

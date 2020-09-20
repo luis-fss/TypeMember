@@ -2,7 +2,7 @@
 
 namespace UnitTests.StubEntities.ExampleWebApplication
 {
-    public class Customer
+    public sealed class Customer
     {
         public Customer()
         {
@@ -10,39 +10,39 @@ namespace UnitTests.StubEntities.ExampleWebApplication
             Orders = new List<Order>();
         }
 
-        public virtual string CustomerID { get; set; }
+        public string CustomerId { get; set; }
 
-        public virtual string CompanyName { get; set; }
+        public string CompanyName { get; set; }
 
-        public virtual string ContactName { get; set; }
+        public string ContactName { get; set; }
 
-        public virtual string ContactTitle { get; set; }
+        public string ContactTitle { get; set; }
 
-        public virtual string Address { get; set; }
+        public string Address { get; set; }
 
-        public virtual string City { get; set; }
+        public string City { get; set; }
 
-        public virtual string Region { get; set; }
+        public string Region { get; set; }
 
-        public virtual string PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
-        public virtual string Country { get; set; }
+        public string Country { get; set; }
 
-        public virtual string Phone { get; set; }
+        public string Phone { get; set; }
 
-        public virtual string Fax { get; set; }
+        public string Fax { get; set; }
 
         private bool _efBool;
-        public virtual bool? EfBool
+        public bool? EfBool
         {
             get { return _efBool; }
             set { _efBool = value.HasValue && value.Value; }
         }
 
-        public virtual string Bool { get; set; }
+        public string Bool { get; set; }
 
         //public virtual IList<CustomerCustomerDemo> CustomerCustomerDemos { get; set; }
 
-        public virtual IList<Order> Orders { get; set; }
+        public IList<Order> Orders { get; set; }
     }
 }

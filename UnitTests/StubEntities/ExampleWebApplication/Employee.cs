@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UnitTests.StubEntities.ExampleWebApplication
 {
-    public class Employee
+    public sealed class Employee
     {
         public Employee()
         {
@@ -12,46 +12,46 @@ namespace UnitTests.StubEntities.ExampleWebApplication
             Orders = new List<Order>();
         }
 
-        public virtual int EmployeeID { get; set; }
+        public int EmployeeId { get; set; }
 
-        public virtual string LastName { get; set; }
+        public string LastName { get; set; }
 
-        public virtual string FirstName { get; set; }
+        public string FirstName { get; set; }
 
-        public virtual string Title { get; set; }
+        public string Title { get; set; }
 
-        public virtual string TitleOfCourtesy { get; set; }
+        public string TitleOfCourtesy { get; set; }
 
-        public virtual DateTime? BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
-        public virtual DateTime? HireDate { get; set; }
+        public DateTime? HireDate { get; set; }
 
-        public virtual string Address { get; set; }
+        public string Address { get; set; }
 
-        public virtual string City { get; set; }
+        public string City { get; set; }
 
-        public virtual string Region { get; set; }
+        public string Region { get; set; }
 
-        public virtual string PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
-        public virtual string Country { get; set; }
+        public string Country { get; set; }
 
-        public virtual string HomePhone { get; set; }
+        public string HomePhone { get; set; }
 
-        public virtual string Extension { get; set; }
+        public string Extension { get; set; }
 
-        public virtual byte[] Photo { get; set; }
+        public byte[] Photo { get; set; }
 
-        public virtual string Notes { get; set; }
+        public string Notes { get; set; }
 
-        public virtual string PhotoPath { get; set; }
+        public string PhotoPath { get; set; }
 
-        public virtual Employee ReportsTo { get; set; }
+        public Employee ReportsTo { get; set; }
 
-        public virtual IList<Employee> Employees { get; set; }
+        public IList<Employee> Employees { get; set; }
 
-        public virtual IList<EmployeeTerritory> EmployeeTerritories { get; set; }
+        public IList<EmployeeTerritory> EmployeeTerritories { get; set; }
 
-        public virtual IList<Order> Orders { get; set; }
+        public IList<Order> Orders { get; set; }
     }
 }

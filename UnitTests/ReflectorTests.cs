@@ -8,6 +8,7 @@ using TypeMember;
 using TypeMember.Util;
 using UnitTests.StubEntities;
 using UnitTests.StubEntities.ExampleWebApplication;
+// ReSharper disable UnusedMember.Local
 
 namespace UnitTests
 {
@@ -122,7 +123,7 @@ namespace UnitTests
         {
             var memberInfo = Reflector.GetMemberInfo<Employee>("Orders.OrderID");
             memberInfo.Should().NotBeNull();
-            memberInfo.Name.Should().Be("OrderID");
+            memberInfo.Name.Should().Be("OrderId");
         }
 
         [Test]
@@ -234,9 +235,9 @@ namespace UnitTests
         [Test]
         public void get_property_expression_collection()
         {
-            Expression<Func<Employee, object>> expected = employee => employee.Orders.Select(order => order.OrderID);
+            Expression<Func<Employee, object>> expected = employee => employee.Orders.Select(order => order.OrderId);
 
-            const string propPath = "Orders.OrderID";
+            const string propPath = "Orders.OrderId";
             var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
 
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
@@ -331,7 +332,7 @@ namespace UnitTests
         [Test]
         public void get_property_expression_linq_compatible_3_value_types()
         {
-            const string propPath = "EmployeeID";
+            const string propPath = "EmployeeId";
 
             var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
 

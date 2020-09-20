@@ -4,6 +4,10 @@ using NUnit.Framework;
 using TypeMember.Util;
 using UnitTests.StubEntities;
 using UnitTests.Util;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
+// ReSharper disable UnusedMember.Local
+// ReSharper disable CollectionNeverUpdated.Local
+// ReSharper disable ClassNeverInstantiated.Local
 
 namespace UnitTests
 {

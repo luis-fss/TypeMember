@@ -2,21 +2,21 @@
 
 namespace UnitTests.StubEntities.ExampleWebApplication
 {
-    public class Category
+    public sealed class Category
     {
         public Category()
         {
             Products = new List<Product>();
         }
 
-        public virtual int CategoryID { get; set; }
+        public int CategoryId { get; set; }
 
-        public virtual string CategoryName { get; set; }
+        public string CategoryName { get; set; }
 
-        public virtual string Description { get; set; }
+        public string Description { get; set; }
 
-        public virtual byte[] Picture { get; set; }
+        public byte[] Picture { get; set; }
 
-        public virtual IList<Product> Products { get; set; }
+        public IList<Product> Products { get; set; }
     }
 }

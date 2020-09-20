@@ -13,8 +13,9 @@ namespace TypeMember.TinyCache
         {
             if (lifespanMilliseconds <= 0)
             {
-                throw new ArgumentOutOfRangeException("lifespanMilliseconds", "lifespanMilliseconds must have a positive value");
+                throw new ArgumentOutOfRangeException(nameof(lifespanMilliseconds), "lifespanMilliseconds must have a positive value");
             }
+            // ReSharper disable once VirtualMemberCallInConstructor
             Item = item;
             LifespanMilliseconds = lifespanMilliseconds;
             ExpiryDateTime = DateTime.Now.AddMilliseconds(lifespanMilliseconds);
