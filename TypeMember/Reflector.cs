@@ -252,7 +252,7 @@ namespace TypeMember
             // Create the root of the expression, namely accessing an employee variable. Could be a Expression.Parameter too.
             var baseExpr = Expression.Parameter(typeof(TSource), typeof(TSource).Name.ToLowerInvariant());
 
-            // Start at index 1, we've already processed index 0 (the root)
+            // Start at index 0 (the root)
             var result = BuildAccessors(baseExpr, split, 0);
 
             if (result is MemberExpression memberExpression && memberExpression.Type != typeof(TProperty) && memberExpression.Type.IsValueType)
