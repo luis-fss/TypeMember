@@ -4,7 +4,7 @@ namespace UnitTests
 {
     [TestFixture]
     [SetCulture("en-us")]
-    public class TestBase
+    public abstract class TestBase
     {
     }
 }
