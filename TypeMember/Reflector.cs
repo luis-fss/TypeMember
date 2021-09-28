@@ -93,7 +93,7 @@ namespace TypeMember
                 return memberExpression.Member.Name;
 
             if (expression.Operand is ConstantExpression constantExpression)
-                return constantExpression.Value.ToString();
+                return constantExpression.Value?.ToString();
 
             throw new ArgumentException("Invalid expression");
         }
@@ -332,7 +332,7 @@ namespace TypeMember
         /// </remarks>
         public static object ChangeType(object value, Type conversionType, CultureInfo cultureInfo = null)
         {
-            cultureInfo = cultureInfo ?? CultureInfo.InvariantCulture;
+            cultureInfo ??= CultureInfo.InvariantCulture;
 
             // Note: This if block was taken from Convert.ChangeType as is, and is needed here since we're
             // checking properties on conversionType below.
@@ -488,17 +488,15 @@ namespace TypeMember
             foreach (var property in properties)
             {
                 var val = property.PropertyType;
-                if (!property.PropertyType.IsClass || property.PropertyType.IsArray ||
-                    property.PropertyType.Module.Name.Equals("mscorlib.dll") ||
-                    property.PropertyType == typeof(string))
+                if (property.PropertyType.IsClass == false || property.PropertyType.GetInterfaces().Contains(typeof(IEnumerable)))
                 {
-                    var path = string.IsNullOrWhiteSpace(rootPath)
-                        ? property.Name
-                        : $"{rootPath}.{property.Name}";
+                    var path = string.IsNullOrWhiteSpace(rootPath) ? property.Name : $"{rootPath}.{property.Name}";
                     dicProperties.Add(path);
                 }
                 else
+                {
                     dicProperties.UnionWith(GetAllPropertiesPathsWithoutCache(val, $"{rootPath}.{property.Name}"));
+                }
             }
 
             return dicProperties;
