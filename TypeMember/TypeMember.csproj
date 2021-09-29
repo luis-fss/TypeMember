@@ -3,11 +3,14 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>latest</LangVersion>
+        <Title>TypeMember</Title>
         <PackageVersion>1.0.0</PackageVersion>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
-        <Title>TypeMember</Title>
+        <InformationalVersion>1.0.0.0</InformationalVersion>
         <Authors>Lukkian</Authors>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/Lukkian/TypeMember</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Lukkian/TypeMember</RepositoryUrl>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -15,5 +18,9 @@
         <Copyright>2021 @ Lukkian</Copyright>
         <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/release-notes.txt"))</PackageReleaseNotes>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="icon.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
 
 </Project>
