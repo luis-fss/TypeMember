@@ -1,0 +1,32 @@
+﻿name: Test releases and pull-requests
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ 'release/**', 'hotfix/**' ]
+
+jobs:
+  build_and_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Number of commits to fetch. 0 indicates all history for all branches and tags. Default: 1
+
+      - name: Setup .NET Core 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Debug --no-restore
+
+      - name: Test
+        run: dotnet test --configuration Debug --no-build --verbosity normal
