@@ -54,7 +54,7 @@ jobs:
       run: dotnet nuget push "TypeMember/bin/Release/TypeMember.${{ steps.gitversion.outputs.semVer }}.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
 
     - name: Add Nuget.org registry source
-      run: dotnet nuget add source --username lfsmgs@gmail.com --password ${{ secrets.NUGET_TOKEN }} --store-password-in-clear-text --name github "https://api.nuget.org/v3/index.json"
+      run: dotnet nuget add source --username lfsmgs@gmail.com --password ${{ secrets.NUGET_TOKEN }} --store-password-in-clear-text --name nuget "https://api.nuget.org/v3/index.json"
       
     - name: Push package to Nuget.org registry
       run: dotnet nuget push "TypeMember/bin/Release/TypeMember.${{ steps.gitversion.outputs.semVer }}.nupkg" --api-key ${{ secrets.NUGET_TOKEN }} --source "nuget" --skip-duplicate
