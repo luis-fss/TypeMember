@@ -3,7 +3,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using TypeMember.Util;
 using UnitTests.StubEntities;
-using UnitTests.Util;
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 // ReSharper disable UnusedMember.Local
 // ReSharper disable CollectionNeverUpdated.Local
@@ -21,32 +20,10 @@ namespace UnitTests
         }
 
         [Test]
-        public void performance_test_using_lambdas()
-        {
-            var it = HiResTimer.Start(10);
-            for (var c = 0; c < it; c++)
-            {
-                ObjectFactory<Foo>.Create(p => p.Name = "Foo");
-            }
-            HiResTimer.Stop();
-        }
-
-        [Test]
         public void should_create_a_object_using_activator()
         {
             var foo = ObjectFactory<Foo>.Create(p => p.Name = "Foo", true);
             foo.Name.Should().Be("Foo");
-        }
-
-        [Test]
-        public void performance_test_using_activator()
-        {
-            var it = HiResTimer.Start(10);
-            for (var c = 0; c < it; c++)
-            {
-                ObjectFactory<Foo>.Create(p => p.Name = "Foo", true);
-            }
-            HiResTimer.Stop();
         }
 
         [Test]
@@ -57,17 +34,6 @@ namespace UnitTests
         }
 
         [Test]
-        public void performance_test_hydrate_a_simple_object()
-        {
-            var it = HiResTimer.Start(10);
-            for (var c = 0; c < it; c++)
-            {
-                ObjectFactory.Hydrate<Foo>();
-            }
-            HiResTimer.Stop();
-        }
-
-        [Test]
         public void should_hydrate_a_complex_object()
         {
             var person = ObjectFactory.Hydrate<Person>();
@@ -75,17 +41,6 @@ namespace UnitTests
             person.MyClassProp.Bee.Should().NotBeNull();
             person.MyClassProp.Stub.Bee.Should().NotBeNull();
             person.MyClassProp.Stub.Bees.Should().NotBeNull();
-        }
-
-        [Test]
-        public void performance_test_hydrate_a_complex_object()
-        {
-            var it = HiResTimer.Start(10);
-            for (var i = 0; i < it; i++)
-            {
-                ObjectFactory.Hydrate<Person>();
-            }
-            HiResTimer.Stop();
         }
 
         class Person
