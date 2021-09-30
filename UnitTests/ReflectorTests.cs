@@ -55,6 +55,15 @@ namespace UnitTests
         }
 
         [Test]
+        public void void_method_extension()
+        {
+            //Should return "Reverse", void method
+            var x = new List<string>();
+            var memberName = x.GetMemberName(y => y.Reverse());
+            Assert.AreEqual("Reverse", memberName);
+        }
+
+        [Test]
         public void method_with_parameter()
         {
             //Should return "LastIndexOf", method with parameter
@@ -97,7 +106,24 @@ namespace UnitTests
         [Test]
         public void get_memberinfo_for_a_property()
         {
+            var memberInfo = Reflector.GetMemberInfo(typeof(Foo), "Bar");
+            memberInfo.Should().NotBeNull();
+            memberInfo.Name.Should().Be("Bar");
+        }
+
+        [Test]
+        public void get_memberinfo_for_a_property_generic()
+        {
             var memberInfo = Reflector.GetMemberInfo<Foo>("Bar");
+            memberInfo.Should().NotBeNull();
+            memberInfo.Name.Should().Be("Bar");
+        }
+
+        [Test]
+        public void get_memberinfo_for_a_property_expression()
+        {
+            Expression<Func<Foo, object>> expression = foo => foo.Bar;
+            var memberInfo = Reflector.GetMemberInfo(expression);
             memberInfo.Should().NotBeNull();
             memberInfo.Name.Should().Be("Bar");
         }
@@ -146,6 +172,14 @@ namespace UnitTests
         public void fix_member_path_for_a_property_name()
         {
             var path = Reflector.FixMemberPathCase<Foo>("bar");
+            path.Should().NotBeNull();
+            path.Should().Be("Bar");
+        }
+
+        [Test]
+        public void fix_member_path_for_a_property_name_overload()
+        {
+            var path = Reflector.FixMemberPathCase(typeof(Foo), "bar");
             path.Should().NotBeNull();
             path.Should().Be("Bar");
         }

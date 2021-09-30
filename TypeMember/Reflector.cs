@@ -25,27 +25,24 @@ namespace TypeMember
 
         #region Get Member Name
 
-        public static string GetMemberName<T>(this T instance, Expression<Func<T, object>> expression)
+        // ReSharper disable once UnusedParameter.Global
+        public static string GetMemberName<TSource>(this TSource instance, Expression<Func<TSource, object>> expression)
         {
             return GetMemberName(expression);
         }
 
-        public static List<string> GetMemberNames<T>(this T instance, params Expression<Func<T, object>>[] expressions)
-        {
-            return expressions.Select(GetMemberName).ToList();
-        }
-
-        public static string GetMemberName<T>(Expression<Func<T, object>> expression)
+        public static string GetMemberName<TSource>(Expression<Func<TSource, object>> expression)
         {
             return GetMemberName(expression.Body);
         }
 
-        public static string GetMemberName<T>(this T instance, Expression<Action<T>> expression)
+        // ReSharper disable once UnusedParameter.Global
+        public static string GetMemberName<TSource>(this TSource instance, Expression<Action<TSource>> expression)
         {
             return GetMemberName(expression);
         }
 
-        public static string GetMemberName<T>(Expression<Action<T>> expression)
+        public static string GetMemberName<TSource>(Expression<Action<TSource>> expression)
         {
             return GetMemberName(expression.Body);
         }
@@ -55,7 +52,7 @@ namespace TypeMember
             return GetMemberName(expression.Body);
         }
 
-        public static string GetMemberName(Expression expression)
+        private static string GetMemberName(Expression expression)
         {
             Guard.Guard.IsNotNull(() => expression);
 
@@ -98,6 +95,12 @@ namespace TypeMember
             throw new ArgumentException("Invalid expression");
         }
 
+        // ReSharper disable once UnusedParameter.Global
+        public static List<string> GetMemberNames<TSource>(this TSource instance, params Expression<Func<TSource, object>>[] expressions)
+        {
+            return expressions.Select(GetMemberName).ToList();
+        }
+
         #endregion
 
         #region Get Member Info
@@ -127,12 +130,17 @@ namespace TypeMember
             return (MemberInfo)type.GetProperty(propertyName, DefaultBindings) ?? type.GetField(propertyName, DefaultBindings);
         }
 
-        public static MemberInfo GetMemberInfo<TType>(string propertyName)
+        public static MemberInfo GetMemberInfo<TSource>(string propertyName)
         {
-            return GetMemberInfo(typeof(TType), propertyName);
+            return GetMemberInfo(typeof(TSource), propertyName);
         }
 
-        public static MemberInfo GetMemberInfo(LambdaExpression expression)
+        public static MemberInfo GetMemberInfo<TSource>(Expression<Func<TSource, object>> expression)
+        {
+            return GetMemberInfo((LambdaExpression)expression);
+        }
+
+        private static MemberInfo GetMemberInfo(LambdaExpression expression)
         {
             Guard.Guard.IsNotNull(() => expression);
 
@@ -145,28 +153,21 @@ namespace TypeMember
                     case ExpressionType.Convert:
                         expressionToCheck = ((UnaryExpression)expressionToCheck).Operand;
                         break;
-
                     case ExpressionType.Lambda:
                         expressionToCheck = ((LambdaExpression)expressionToCheck).Body;
                         break;
-
                     case ExpressionType.MemberAccess:
+                    {
                         var memberExpression = ((MemberExpression)expressionToCheck);
                         return memberExpression.Member;
-
+                    }
                     case ExpressionType.Add:
                         expressionToCheck = ((BinaryExpression)expressionToCheck).Left;
                         break;
-
                     default:
                         throw new NotSupportedException($"This expression is not supported: {expression}");
                 }
             }
-        }
-
-        public static MemberInfo GetMemberInfo<T>(Expression<Func<T, object>> expression)
-        {
-            return GetMemberInfo((LambdaExpression)expression);
         }
 
         private static Type ExtractUnderlyingTypeFromGenericEnumerable(Type type)
@@ -210,9 +211,9 @@ namespace TypeMember
             return property == null ? null : property.Name;
         }
 
-        public static string FixMemberPathCase<TType>(string propertyName)
+        public static string FixMemberPathCase<TSource>(string propertyName)
         {
-            return FixMemberPathCase(typeof(TType), propertyName);
+            return FixMemberPathCase(typeof(TSource), propertyName);
         }
 
         #endregion
@@ -423,6 +424,22 @@ namespace TypeMember
                 case TypeCode.Double:
                 case TypeCode.Decimal:
                     return true;
+                case TypeCode.Empty:
+                    break;
+                case TypeCode.Object:
+                    break;
+                case TypeCode.DBNull:
+                    break;
+                case TypeCode.Boolean:
+                    break;
+                case TypeCode.Char:
+                    break;
+                case TypeCode.DateTime:
+                    break;
+                case TypeCode.String:
+                    break;
+                default:
+                    return false;
             }
 
             return false;

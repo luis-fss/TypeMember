@@ -3,7 +3,6 @@ using NUnit.Framework;
 using TypeMember.Exceptions;
 using TypeMember.Guard;
 using UnitTests.StubEntities;
-using UnitTests.Util;
 
 namespace UnitTests
 {
@@ -21,18 +20,6 @@ namespace UnitTests
         {
             object obj = "value";
             Guard.IsNotNull(() => obj);
-        }
-
-        [Test]
-        public void performance_test()
-        {
-            var it = HiResTimer.Start(10);
-            object obj = "value";
-            for (var i = 0; i < it; i++)
-            {
-                Guard.IsNotNull(() => obj);
-            }
-            HiResTimer.Stop();
         }
 
         [Test]

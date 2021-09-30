@@ -3,17 +3,31 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>latest</LangVersion>
-        <PackageVersion>0.1.3</PackageVersion>
         <Title>TypeMember</Title>
+        <PackageVersion>1.0.0</PackageVersion>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <InformationalVersion>1.0.0.0</InformationalVersion>
         <Authors>Lukkian</Authors>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/Lukkian/TypeMember</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Lukkian/TypeMember</RepositoryUrl>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <AssemblyVersion>0.1.2.0</AssemblyVersion>
-        <FileVersion>0.1.2.0</FileVersion>
-        <Description>This project is still in prototype phase and should only be used for testing.</Description>
-        <Copyright>2020 @ Lukkian</Copyright>
-        <PackageReleaseNotes>Just a few refactorings.</PackageReleaseNotes>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <Description>This project is still in the prototype stage and should only be used for testing.</Description>
+        <Copyright>2021 @ Lukkian</Copyright>
+        <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/release-notes.txt"))</PackageReleaseNotes>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="GitVersion.MsBuild" Version="5.7.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="icon.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
 
 </Project>

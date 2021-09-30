@@ -1,0 +1,83 @@
+name: Publish Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build_test_publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # Number of commits to fetch. 0 indicates all history for all branches and tags. Default: 1
+
+    - name: Setup .NET Core 5.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+
+    - name: Restore dotnet tools
+      run: dotnet tool restore
+
+    - name: Setup GitVersion 5.7.x
+      uses: gittools/actions/gitversion/setup@v0.9.10
+      with:
+        versionSpec: '5.7.x'
+
+    - name: Execute GitVersion
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v0.9.10
+
+    - name: Print app version
+      run: |
+        echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test --configuration Release --no-build --verbosity normal
+      
+    - name: Create nuget package
+      run: dotnet pack -c release -p:packageversion=${{ steps.gitversion.outputs.semVer }} -p:version=${{ steps.gitversion.outputs.semVer }} -p:fileversion=${{ steps.gitversion.outputs.semVer }} -p:informationalversion=${{ steps.gitversion.outputs.informationalVersion }}
+      
+    - name: Add GitHub registry source
+      run: dotnet nuget add source --username lfsmgs@gmail.com --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Lukkian/index.json"
+
+    - name: Push package to GitHub registry
+      run: dotnet nuget push "TypeMember/bin/Release/TypeMember.${{ steps.gitversion.outputs.semVer }}.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
+
+    - name: Add Nuget.org registry source
+      run: dotnet nuget add source --username lfsmgs@gmail.com --password ${{ secrets.NUGET_TOKEN }} --store-password-in-clear-text --name github "https://api.nuget.org/v3/index.json"
+      
+    - name: Push package to Nuget.org registry
+      run: dotnet nuget push "TypeMember/bin/Release/TypeMember.${{ steps.gitversion.outputs.semVer }}.nupkg" --api-key ${{ secrets.NUGET_TOKEN }} --source "nuget" --skip-duplicate
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.gitversion.outputs.semVer }}
+        release_name: Release TypeMember.v${{ steps.gitversion.outputs.semVer }}
+        body_path: TypeMember/release-notes.txt
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/TypeMember/bin/Release/TypeMember.${{ steps.gitversion.outputs.semVer }}.nupkg
+        asset_name: TypeMember.${{ steps.gitversion.outputs.semVer }}.nupkg
+        asset_content_type: application/zip
