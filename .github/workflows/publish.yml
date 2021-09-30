@@ -63,7 +63,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v${{ steps.gitversion.outputs.semVer }}
-        release_name: Release TypeMember.v${{ steps.gitversion.outputs.semVer }}
+        release_name: TypeMember ${{ steps.gitversion.outputs.semVer }}
         body_path: TypeMember/release-notes.txt
         draft: false
         prerelease: false
