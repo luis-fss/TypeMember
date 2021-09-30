@@ -4,19 +4,16 @@
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Title>TypeMember</Title>
-        <PackageVersion>1.0.0</PackageVersion>
-        <AssemblyVersion>1.0.0.0</AssemblyVersion>
-        <FileVersion>1.0.0.0</FileVersion>
-        <InformationalVersion>1.0.0.0</InformationalVersion>
         <Authors>Lukkian</Authors>
         <PackageIcon>icon.png</PackageIcon>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/Lukkian/TypeMember</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/Lukkian/TypeMember</RepositoryUrl>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <Description>This project is still in the prototype stage and should only be used for testing.</Description>
-        <Copyright>2021 @ Lukkian</Copyright>
+        <Copyright>@ github.com/Lukkian</Copyright>
         <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/release-notes.txt"))</PackageReleaseNotes>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
