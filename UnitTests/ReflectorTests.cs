@@ -18,7 +18,7 @@ namespace UnitTests
         public void value_type_property()
         {
             //Should return "Length", value type property
-            var memberName = Reflector.GetMemberName<string>(x => x.Length);
+            var memberName = Reflector.MemberName.Get<string>(x => x.Length);
             Assert.AreEqual("Length", memberName);
         }
 
@@ -26,7 +26,7 @@ namespace UnitTests
         public void reference_type_property()
         {
             //Should return "Data", reference type property
-            var memberName = Reflector.GetMemberName<Exception>(x => x.Data);
+            var memberName = Reflector.MemberName.Get<Exception>(x => x.Data);
             Assert.AreEqual("Data", memberName);
         }
 
@@ -34,7 +34,7 @@ namespace UnitTests
         public void method_returning_reference_type()
         {
             //Should return "Clone", method returning reference type
-            var memberName = Reflector.GetMemberName<string>(x => x.Clone());
+            var memberName = Reflector.MemberName.Get<string>(x => x.Clone());
             Assert.AreEqual("Clone", memberName);
         }
 
@@ -42,7 +42,7 @@ namespace UnitTests
         public void method_returning_value_type()
         {
             //Should return "GetHashCode", method returning value type
-            var memberName = Reflector.GetMemberName<string>(x => x.GetHashCode());
+            var memberName = Reflector.MemberName.Get<string>(x => x.GetHashCode());
             Assert.AreEqual("GetHashCode", memberName);
         }
 
@@ -50,7 +50,7 @@ namespace UnitTests
         public void void_method()
         {
             //Should return "Reverse", void method
-            var memberName = Reflector.GetMemberName<List<string>>(x => x.Reverse());
+            var memberName = Reflector.MemberName.Get<List<string>>(x => x.Reverse());
             Assert.AreEqual("Reverse", memberName);
         }
 
@@ -67,7 +67,7 @@ namespace UnitTests
         public void method_with_parameter()
         {
             //Should return "LastIndexOf", method with parameter
-            var memberName = Reflector.GetMemberName<string>(x => x.LastIndexOf(','));
+            var memberName = Reflector.MemberName.Get<string>(x => x.LastIndexOf(','));
             Assert.AreEqual("LastIndexOf", memberName);
         }
 
@@ -83,7 +83,7 @@ namespace UnitTests
         public void value_complex_type_property()
         {
             //Should return "Name", value type property
-            var memberName = Reflector.GetMemberName<Foo>(x => x.Bar.Name);
+            var memberName = Reflector.MemberName.Get<Foo>(x => x.Bar.Name);
             Assert.AreEqual("Name", memberName);
         }
 
@@ -91,7 +91,7 @@ namespace UnitTests
         public void get_member_name_from_static_type()
         {
             //Should return "Min", value type property
-            var memberName = Reflector.GetMemberName(() => Math.Min(0, 1));
+            var memberName = Reflector.MemberName.Get(() => Math.Min(0, 1));
             Assert.AreEqual("Min", memberName);
         }
 

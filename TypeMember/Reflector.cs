@@ -24,81 +24,7 @@ namespace TypeMember
             //                         60 Min,  15 Min
             new TimedTinyCache<string>(3600000, 900000);
 
-        #region Get Member Name
-
-        // ReSharper disable once UnusedParameter.Global
-        public static string GetMemberName<TSource>(this TSource instance, Expression<Func<TSource, object>> expression)
-        {
-            return GetMemberName(expression);
-        }
-
-        public static string GetMemberName<TSource>(Expression<Func<TSource, object>> expression)
-        {
-            return GetMemberName(expression.Body);
-        }
-
-        // ReSharper disable once UnusedParameter.Global
-        public static string GetMemberName<TSource>(this TSource instance, Expression<Action<TSource>> expression)
-        {
-            return GetMemberName(expression);
-        }
-
-        public static string GetMemberName<TSource>(Expression<Action<TSource>> expression)
-        {
-            return GetMemberName(expression.Body);
-        }
-
-        public static string GetMemberName(Expression<Func<object>> expression)
-        {
-            return GetMemberName(expression.Body);
-        }
-
-        private static string GetMemberName(Expression expression)
-        {
-            if (expression is MemberExpression memberExpression)
-            {
-                return memberExpression.Member.Name;
-            }
-
-            if (expression is MethodCallExpression methodCallExpression)
-            {
-                return methodCallExpression.Method.Name;
-            }
-
-            if (expression is UnaryExpression unaryExpression)
-            {
-                return GetMemberName(unaryExpression);
-            }
-
-            if (expression is LambdaExpression lambdaExpression)
-            {
-                return GetMemberName(lambdaExpression.Body);
-            }
-
-            throw new ArgumentException("Invalid expression");
-        }
-
-        private static string GetMemberName(UnaryExpression expression)
-        {
-            if (expression.Operand is MethodCallExpression methodExpression)
-                return methodExpression.Method.Name;
-
-            if (expression.Operand is MemberExpression memberExpression)
-                return memberExpression.Member.Name;
-
-            if (expression.Operand is ConstantExpression constantExpression)
-                return constantExpression.Value?.ToString();
-
-            throw new ArgumentException("Invalid expression");
-        }
-
-        // ReSharper disable once UnusedParameter.Global
-        public static List<string> GetMemberNames<TSource>(this TSource instance, params Expression<Func<TSource, object>>[] expressions)
-        {
-            return expressions.Select(GetMemberName).ToList();
-        }
-
-        #endregion
+        public static MemberName MemberName { get; } = new();
 
         #region Get Member Info
 
@@ -227,7 +153,7 @@ namespace TypeMember
 
         public static LambdaExpression GetPropertyExpression<TSource>(string propName, Type propType)
         {
-            var getPropertyExpression = GetMemberName(() => GetPropertyExpression<object, object>(null));
+            var getPropertyExpression = MemberName.Get(() => GetPropertyExpression<object, object>(null));
 
             var method = typeof(Reflector).GetMethod(
                 getPropertyExpression,
