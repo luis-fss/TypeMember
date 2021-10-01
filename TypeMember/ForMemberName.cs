@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace TypeMember
 {
-    public class MemberName
+    public class ForMemberName
     {
         public string Get<TSource>(Expression<Func<TSource, object>> expression)
         {

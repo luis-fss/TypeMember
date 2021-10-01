@@ -24,91 +24,8 @@ namespace TypeMember
             //                         60 Min,  15 Min
             new TimedTinyCache<string>(3600000, 900000);
 
-        public static MemberName MemberName { get; } = new();
-
-        #region Get Member Info
-
-        public static MemberInfo GetMemberInfo(Type type, string propertyName)
-        {
-            Guard.ShouldNotBeNull(() => type);
-            Guard.ShouldNotBeNull(() => propertyName);
-
-            var parts = propertyName.Split('.');
-
-            if (parts.Length > 1)
-            {
-                MemberInfo Func(Type innerType) => GetMemberInfo(innerType, parts.Skip(1).Aggregate((a, i) => a + "." + i));
-
-                var propertyInfo = type.GetProperty(parts[0], DefaultBindings);
-                if (propertyInfo != null)
-                {
-                    var t = ExtractUnderlyingTypeFromGenericEnumerable(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-                    return Func(t);
-                }
-
-                var memberInfo = type.GetField(parts[0], DefaultBindings);
-                return memberInfo != null ? Func(memberInfo.FieldType) : null;
-            }
-
-            return (MemberInfo)type.GetProperty(propertyName, DefaultBindings) ?? type.GetField(propertyName, DefaultBindings);
-        }
-
-        public static MemberInfo GetMemberInfo<TSource>(string propertyName)
-        {
-            return GetMemberInfo(typeof(TSource), propertyName);
-        }
-
-        public static MemberInfo GetMemberInfo<TSource>(Expression<Func<TSource, object>> expression)
-        {
-            return GetMemberInfo((LambdaExpression)expression);
-        }
-
-        private static MemberInfo GetMemberInfo(LambdaExpression expression)
-        {
-            Guard.ShouldNotBeNull(() => expression);
-
-            Expression expressionToCheck = expression;
-
-            while (true)
-            {
-                switch (expressionToCheck.NodeType)
-                {
-                    case ExpressionType.Convert:
-                        expressionToCheck = ((UnaryExpression)expressionToCheck).Operand;
-                        break;
-                    case ExpressionType.Lambda:
-                        expressionToCheck = ((LambdaExpression)expressionToCheck).Body;
-                        break;
-                    case ExpressionType.MemberAccess:
-                    {
-                        var memberExpression = ((MemberExpression)expressionToCheck);
-                        return memberExpression.Member;
-                    }
-                    case ExpressionType.Add:
-                        expressionToCheck = ((BinaryExpression)expressionToCheck).Left;
-                        break;
-                    default:
-                        throw new NotSupportedException($"This expression is not supported: {expression}");
-                }
-            }
-        }
-
-        private static Type ExtractUnderlyingTypeFromGenericEnumerable(Type type)
-        {
-            Guard.ShouldNotBeNull(() => type);
-
-            foreach (var interfaceType in type.GetInterfaces())
-            {
-                if (interfaceType.IsGenericType &&
-                    interfaceType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                {
-                    return interfaceType.GetGenericArguments()[0];
-                }
-            }
-            return null;
-        }
-
-        #endregion
+        public static ForMemberName MemberName { get; } = new();
+        public static ForMemberInfo MemberInfo { get; } = new();
 
         #region Fix Member Path Case
 
@@ -140,16 +57,6 @@ namespace TypeMember
         }
 
         #endregion
-
-        public static T As<T>(this object subject) where T : class
-        {
-            return subject as T;
-        }
-
-        public static T Cast<T>(this object subject)
-        {
-            return (T)subject;
-        }
 
         public static LambdaExpression GetPropertyExpression<TSource>(string propName, Type propType)
         {
@@ -236,6 +143,16 @@ namespace TypeMember
         }
 
         #region Change and convert types
+
+        public static T As<T>(this object subject) where T : class
+        {
+            return subject as T;
+        }
+
+        public static T Cast<T>(this object subject)
+        {
+            return (T)subject;
+        }
 
         /// <summary>
         /// Returns an Object with the specified Type and whose value is equivalent to the specified object.
@@ -374,8 +291,8 @@ namespace TypeMember
 
         public static bool IsValidPropertyPath(this Type type, string propertyPath)
         {
-            var memberInfo = GetMemberInfo(type, propertyPath);
-            return memberInfo != null;
+            var memberInfo = MemberInfo.Get(type, propertyPath);
+            return memberInfo is not null;
         }
 
         public static bool IsValidPropertyPath<T>(string propertyPath)
@@ -764,7 +681,7 @@ namespace TypeMember
         {
             if (expression is LambdaExpression lambdaExpression)
             {
-                var memberInfo = GetMemberInfo(lambdaExpression);
+                var memberInfo = MemberInfo.Get(lambdaExpression);
                 return GetMemberType(memberInfo);
             }
 
