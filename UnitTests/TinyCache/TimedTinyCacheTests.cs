@@ -22,6 +22,7 @@ namespace UnitTests.TinyCache
             var person = new Person("Luis Fernando", 25);
             var cache = GetCache();
             cache.SetItem(key, person);
+            cache.Items.Should().HaveCount(1);
             Thread.Sleep(60);
             cache.Items.Should().HaveCount(0);
             Action action = () => cache.GetItem<Person>(key);

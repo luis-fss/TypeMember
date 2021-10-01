@@ -5,14 +5,14 @@ using UnitTests.StubEntities.Blog;
 
 namespace UnitTests
 {
-    public class RavenDBPropertyPathTests : TestBase
+    public class PropertyPathTests : TestBase
     {
         [Test]
         public void GetMemberName_WhenSimpleProperty_ReturnsPropertyName()
         {
-            var adquirente = new Blog();
+            var blog = new Blog();
 
-            var propertyName = adquirente.GetMemberName(b => b.Name);
+            var propertyName = blog.GetMemberName(b => b.Name);
 
             Assert.That(propertyName, Is.EqualTo("Name"));
         }
@@ -20,9 +20,9 @@ namespace UnitTests
         [Test]
         public void GetMemberNames_WhenMoreThanOneProperty_ReturnsListOfPropertyNames()
         {
-            var adquirente = new Blog();
+            var blog = new Blog();
 
-            var propertyNames = adquirente.GetMemberNames(b => b.Name, b => b.CreatedOn, b => b.Admin);
+            var propertyNames = blog.GetMemberNames(b => b.Name, b => b.CreatedOn, b => b.Admin);
 
             Assert.That(propertyNames.Count, Is.EqualTo(3));
             Assert.That(propertyNames[0], Is.EqualTo("Name"));
@@ -33,9 +33,9 @@ namespace UnitTests
         [Test]
         public void GetMemberName_WhenMethod_ReturnsMethodName()
         {
-            var adquirente = new Blog();
+            var blog = new Blog();
 
-            var nameOfTheMethod = adquirente.GetMemberName(b => b.ToString());
+            var nameOfTheMethod = blog.GetMemberName(b => b.ToString());
 
             Assert.That(nameOfTheMethod, Is.EqualTo("ToString"));
         }
@@ -43,9 +43,9 @@ namespace UnitTests
         [Test]
         public void GetPropertyPath_WhenSecondLevelProperty_ReturnsPropertyName()
         {
-            var adquirente = new Blog();
+            var blog = new Blog();
 
-            var propertyName = adquirente.GetPropertyPath(b => b.Admin.Name);
+            var propertyName = blog.GetPropertyPath(b => b.Admin.Name);
 
             Assert.That(propertyName, Is.EqualTo("Admin.Name"));
         }
@@ -53,9 +53,9 @@ namespace UnitTests
         [Test]
         public void GetPropertyPath_ThirdSecondLevelProperty_ReturnsPropertyName()
         {
-            var adquirente = new Blog();
+            var blog = new Blog();
 
-            var propertyName = adquirente.GetPropertyPath(b => b.Admin.Address.State);
+            var propertyName = blog.GetPropertyPath(b => b.Admin.Address.State);
 
             Assert.That(propertyName, Is.EqualTo("Admin.Address.State"));
         }
@@ -63,9 +63,9 @@ namespace UnitTests
         [Test]
         public void GetMemberName_WhenCollectionProperty_ReturnsPropertyName()
         {
-            var adquirente = new Blog();
+            var blog = new Blog();
 
-            var propertyName = adquirente.GetMemberName(b => b.Posts);
+            var propertyName = blog.GetMemberName(b => b.Posts);
 
             Assert.That(propertyName, Is.EqualTo("Posts"));
         }

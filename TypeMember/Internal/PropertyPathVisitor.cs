@@ -2,27 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using TypeMember.Util;
 
-namespace TypeMember.Util
+namespace TypeMember.Internal
 {
-    public class PropertyPathVisitor : BasePropertyPathVisitor
+    internal class PropertyPathVisitor : BasePropertyPathVisitor
     {
-        public string CollectionSuffix { get; set; }
+        public string CollectionSuffix { get; init; }
 
         public HashSet<string> Properties { get; private set; }
 
         private readonly bool _flag;
         private Type _underlyingRootType;
 
-        public PropertyPathVisitor()
-            : base(null)
+        public PropertyPathVisitor() : base(null)
         {
             _flag = true;
             Properties = new HashSet<string>();
         }
 
-        private PropertyPathVisitor(Expression expression, bool flag)
-            : base(expression)
+        private PropertyPathVisitor(Expression expression, bool flag) : base(expression)
         {
             _flag = flag;
         }
@@ -33,7 +32,7 @@ namespace TypeMember.Util
             {
                 if (node is LambdaExpression lambda)
                 {
-                    _underlyingRootType = _underlyingRootType ?? lambda.Parameters[0].Type;
+                    _underlyingRootType ??= lambda.Parameters[0].Type;
                 }
                 return base.Visit(node);
             }

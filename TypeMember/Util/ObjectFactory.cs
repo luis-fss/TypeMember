@@ -8,7 +8,7 @@ namespace TypeMember.Util
 {
     public static class ObjectFactory
     {
-        const BindingFlags DefaultBindingFlags = BindingFlags.Instance | BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Public;
+        private const BindingFlags DefaultBindingFlags = BindingFlags.Instance | BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Public;
 
         public static ConstructorInfo GetConstructor<T>(Type[] parameterTypes = null)
         {

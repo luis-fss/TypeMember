@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace TypeMember.Util
+namespace TypeMember.Internal
 {
     public abstract class BasePropertyPathVisitor : ExpressionVisitor
     {

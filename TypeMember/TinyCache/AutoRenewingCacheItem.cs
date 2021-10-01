@@ -2,7 +2,7 @@
 
 namespace TypeMember.TinyCache
 {
-    class AutoRenewingCacheItem<TItem> : TimedCacheItem<TItem>
+    internal class AutoRenewingCacheItem<TItem> : TimedCacheItem<TItem>
     {
         private readonly Func<TItem> _renewalFunction;
         public override bool HasExpired => false;

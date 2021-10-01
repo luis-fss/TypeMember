@@ -34,7 +34,7 @@ namespace TypeMember.TinyCache
             lock (this)
             {
                 var keysToRemove = _cache.Items
-                    .Where(kvp => !(kvp.Value is IExpirable expirable) || expirable.HasExpired)
+                    .Where(kvp => kvp.Value is not IExpirable expirable || expirable.HasExpired)
                     .Select(kvp => kvp.Key);
                 foreach (var key in keysToRemove)
                 {

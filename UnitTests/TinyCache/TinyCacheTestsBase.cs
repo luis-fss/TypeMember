@@ -23,7 +23,7 @@ namespace UnitTests.TinyCache
         }
 
         [Test]
-        public void should_override_duplicate_setted_itens()
+        public void should_override_duplicates()
         {
             const string key = "person";
             var person = new Person("Luis Fernando", 25);
