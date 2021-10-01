@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using TypeMember.Exceptions;
-using TypeMember.Internal;
-using TypeMember.TinyCache;
 using TypeMember.Util;
 
 namespace TypeMember
@@ -18,14 +14,9 @@ namespace TypeMember
     {
         private const BindingFlags DefaultBindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.IgnoreCase;
 
-        private static ITinyCache<string> Cache =>
-            // 3600000 Milliseconds = 60 Minutes
-            // 900000 Milliseconds = 15 Minutes
-            //                         60 Min,  15 Min
-            new TimedTinyCache<string>(3600000, 900000);
-
         public static ForMemberName MemberName { get; } = new();
         public static ForMemberInfo MemberInfo { get; } = new();
+        public static ForProperty Property { get; } = new();
 
         #region Fix Member Path Case
 
@@ -283,99 +274,6 @@ namespace TypeMember
             }
 
             return false;
-        }
-
-        #endregion
-
-        #region Get properties paths
-
-        public static bool IsValidPropertyPath(this Type type, string propertyPath)
-        {
-            var memberInfo = MemberInfo.Get(type, propertyPath);
-            return memberInfo is not null;
-        }
-
-        public static bool IsValidPropertyPath<T>(string propertyPath)
-        {
-            return IsValidPropertyPath(typeof(T), propertyPath);
-        }
-
-        public static string GetPropertyPath<T>(this T instance, Expression<Func<T, object>> expression)
-        {
-            return expression.GetPropertyPath();
-        }
-
-        public static string GetPropertyPath<T>(Expression<Func<T, object>> expression, string collectionSuffix = null)
-        {
-            return expression.GetPropertyPath(collectionSuffix);
-        }
-
-        public static HashSet<string> GetAllPropertiesPaths<T>()
-        {
-            return GetAllPropertiesPathsWithCache(typeof(T));
-        }
-
-        public static HashSet<string> GetAllPropertiesPaths(this object obj)
-        {
-            return GetAllPropertiesPathsWithCache(obj.GetType());
-        }
-
-        public static HashSet<string> GetAllPropertiesPaths(this Type type)
-        {
-            return GetAllPropertiesPathsWithCache(type);
-        }
-
-        private static HashSet<string> GetAllPropertiesPathsWithCache(Type type)
-        {
-            var getAllPropertiesPaths = Cache.GetOrSetItem("getAllPropertiesPathsCacheKey-{93e7c805-2277-4c03-a82b-e7a4b54c8e94}",
-                () => new ConcurrentDictionary<Type, HashSet<string>>());
-
-            return getAllPropertiesPaths.GetOrAdd(type,
-                tp => GetAllPropertiesPathsWithoutCache(tp, null));
-        }
-
-        private static HashSet<string> GetAllPropertiesPathsWithoutCache(Type objectType, string rootPath)
-        {
-            if (!string.IsNullOrWhiteSpace(rootPath) && rootPath.StartsWith("."))
-                rootPath = rootPath.Substring(1);
-
-            var dicProperties = new HashSet<string>();
-            var properties = objectType.GetProperties();
-
-            foreach (var property in properties)
-            {
-                var val = property.PropertyType;
-                if (property.PropertyType.IsClass == false || property.PropertyType.GetInterfaces().Contains(typeof(IEnumerable)))
-                {
-                    var path = string.IsNullOrWhiteSpace(rootPath) ? property.Name : $"{rootPath}.{property.Name}";
-                    dicProperties.Add(path);
-                }
-                else
-                {
-                    dicProperties.UnionWith(GetAllPropertiesPathsWithoutCache(val, $"{rootPath}.{property.Name}"));
-                }
-            }
-
-            return dicProperties;
-        }
-
-        public static bool IsNotPrimitive(Type t)
-        {
-            return new[] {
-                typeof(string),
-                typeof(char),
-                typeof(byte),
-                typeof(ushort),
-                typeof(short),
-                typeof(uint),
-                typeof(int),
-                typeof(ulong),
-                typeof(long),
-                typeof(float),
-                typeof(double),
-                typeof(decimal),
-                typeof(DateTime)
-            }.Contains(t) == false /*&& !t.IsInterface && !t.IsArray && t.IsClass && !t.Module.Name.Equals("mscorlib.dll")*/;
         }
 
         #endregion

@@ -46,7 +46,7 @@ namespace TypeMember.Util
 
         public static object Create(Type type)
         {
-            if (Reflector.IsNotPrimitive(type))
+            if (Reflector.Property.IsNotPrimitive(type))
             {
                 return Activator.CreateInstance(type);
             }

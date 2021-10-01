@@ -370,7 +370,7 @@ namespace UnitTests
 
             var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
 
-            var propertyPath = Reflector.GetPropertyPath(propertyExpression);
+            var propertyPath = Reflector.Property.GetPropertyPath(propertyExpression);
 
             propertyPath.Should().Be(propPath.Substring(propPath.IndexOf('.') + 1));
         }

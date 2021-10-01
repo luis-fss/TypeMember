@@ -73,7 +73,7 @@ namespace UnitTests
         [Test]
         public void GetPropertyPath_WhenSecondLevelCollectionProperty_ReturnsPropertyName()
         {
-            var propertyName = Reflector.GetPropertyPath<Blog>(b => b.Posts.Select(p => p.Author));
+            var propertyName = Reflector.Property.GetPropertyPath<Blog>(b => b.Posts.Select(p => p.Author));
 
             Assert.That(propertyName, Is.EqualTo("Posts.Author"));
         }
@@ -81,7 +81,7 @@ namespace UnitTests
         [Test]
         public void GetPropertyPath_WhenSecondLevelCollectionProperty_WithCollectionSuffix_ReturnsPropertyName()
         {
-            var propertyName = Reflector.GetPropertyPath<Blog>(b => b.Posts.Select(p => p.Author), "[]");
+            var propertyName = Reflector.Property.GetPropertyPath<Blog>(b => b.Posts.Select(p => p.Author), "[]");
 
             Assert.That(propertyName, Is.EqualTo("Posts[].Author"));
         }
@@ -89,7 +89,7 @@ namespace UnitTests
         [Test]
         public void GetPropertyPath_WhenUndefinedLevelCollectionProperty_ReturnsPropertyName()
         {
-            var propertyName = Reflector.GetPropertyPath<Blog>(b => b.Posts.Select(p => p.Comments.Select(c => c.Member.UserName)));
+            var propertyName = Reflector.Property.GetPropertyPath<Blog>(b => b.Posts.Select(p => p.Comments.Select(c => c.Member.UserName)));
 
             Assert.That(propertyName, Is.EqualTo("Posts.Comments.Member.UserName"));
         }
@@ -97,7 +97,7 @@ namespace UnitTests
         [Test]
         public void GetPropertyPath_WhenUndefinedLevelCollectionProperty_WithCollectionSuffix_ReturnsPropertyName()
         {
-            var propertyName = Reflector.GetPropertyPath<Blog>(b => b.Posts.Select(p => p.Comments.Select(c => c.Member.UserName)), "[]");
+            var propertyName = Reflector.Property.GetPropertyPath<Blog>(b => b.Posts.Select(p => p.Comments.Select(c => c.Member.UserName)), "[]");
 
             Assert.That(propertyName, Is.EqualTo("Posts[].Comments[].Member.UserName"));
         }

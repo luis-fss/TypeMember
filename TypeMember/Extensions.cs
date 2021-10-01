@@ -23,5 +23,26 @@ namespace TypeMember
         {
             return expressions.Select(Reflector.MemberName.Get).ToList();
         }
+        
+        public static bool IsValidPropertyPath(this Type type, string propertyPath)
+        {
+            var memberInfo = Reflector.MemberInfo.Get(type, propertyPath);
+            return memberInfo is not null;
+        }
+
+        public static string GetPropertyPath<T>(this T instance, Expression<Func<T, object>> expression)
+        {
+            return Reflector.Property.GetPropertyPath(expression);
+        }
+
+        public static HashSet<string> GetAllPropertiesPaths(this object obj)
+        {
+            return Reflector.Property.GetAllPropertiesPathsWithCache(obj.GetType());
+        }
+
+        public static HashSet<string> GetAllPropertiesPaths(this Type type)
+        {
+            return Reflector.Property.GetAllPropertiesPathsWithCache(type);
+        }
     }
 }
