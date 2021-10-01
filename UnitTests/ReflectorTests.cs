@@ -171,7 +171,7 @@ namespace UnitTests
         [Test]
         public void fix_member_path_for_a_property_name()
         {
-            var path = Reflector.FixMemberPathCase<Foo>("bar");
+            var path = Reflector.Property.FixPathCase<Foo>("bar");
             path.Should().NotBeNull();
             path.Should().Be("Bar");
         }
@@ -179,7 +179,7 @@ namespace UnitTests
         [Test]
         public void fix_member_path_for_a_property_name_overload()
         {
-            var path = Reflector.FixMemberPathCase(typeof(Foo), "bar");
+            var path = Reflector.Property.FixPathCase(typeof(Foo), "bar");
             path.Should().NotBeNull();
             path.Should().Be("Bar");
         }
@@ -187,7 +187,7 @@ namespace UnitTests
         [Test]
         public void fix_member_path_for_a_nested_property_name()
         {
-            var path = Reflector.FixMemberPathCase<Foo>("bar.name");
+            var path = Reflector.Property.FixPathCase<Foo>("bar.name");
             path.Should().NotBeNull();
             path.Should().Be("Bar.Name");
         }
@@ -195,7 +195,7 @@ namespace UnitTests
         [Test]
         public void fix_member_path_for_a_nested_nested_property_name()
         {
-            var path = Reflector.FixMemberPathCase<Foo>("bar.bee.name");
+            var path = Reflector.Property.FixPathCase<Foo>("bar.bee.name");
             path.Should().NotBeNull();
             path.Should().Be("Bar.Bee.Name");
         }
@@ -252,7 +252,7 @@ namespace UnitTests
         public void get_property_expression()
         {
             const string propPath = "Bar.Name";
-            var propertyExpression = Reflector.GetPropertyExpression<Foo, string>(propPath);
+            var propertyExpression = Reflector.Property.GetPropertyExpression<Foo, string>(propPath);
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
             Assert.AreEqual("foo => foo.Bar.Name", propertyExpression.ToString());
         }
@@ -261,7 +261,7 @@ namespace UnitTests
         public void get_property_expression_nested()
         {
             const string propPath = "Bar.Bee.UnitPrice";
-            var propertyExpression = Reflector.GetPropertyExpression<Foo, decimal>(propPath);
+            var propertyExpression = Reflector.Property.GetPropertyExpression<Foo, decimal>(propPath);
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
             Assert.AreEqual("foo => foo.Bar.Bee.UnitPrice", propertyExpression.ToString());
         }
@@ -272,7 +272,7 @@ namespace UnitTests
             Expression<Func<Employee, object>> expected = employee => employee.Orders.Select(order => order.OrderId);
 
             const string propPath = "Orders.OrderId";
-            var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
+            var propertyExpression = Reflector.Property.GetPropertyExpression<Employee, object>(propPath);
 
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
             propertyExpression.ToString().Should().Be(expected.ToString());
@@ -284,7 +284,7 @@ namespace UnitTests
             Expression<Func<Employee, object>> expected = employee => employee.Orders.Select(order => order.Customer.City);
 
             const string propPath = "Orders.Customer.City";
-            var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
+            var propertyExpression = Reflector.Property.GetPropertyExpression<Employee, object>(propPath);
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
             propertyExpression.ToString().Should().Be(expected.ToString());
         }
@@ -342,7 +342,7 @@ namespace UnitTests
 
             const string propPath = "City";
             
-            var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
+            var propertyExpression = Reflector.Property.GetPropertyExpression<Employee, object>(propPath);
 
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
             
@@ -356,7 +356,7 @@ namespace UnitTests
 
             const string propPath = "City";
             
-            var propertyExpression = Reflector.GetPropertyExpression<Employee, string>(propPath);
+            var propertyExpression = Reflector.Property.GetPropertyExpression<Employee, string>(propPath);
 
             Assert.AreEqual(propPath, propertyExpression.GetPropertyPath());
             
@@ -368,7 +368,7 @@ namespace UnitTests
         {
             const string propPath = "EmployeeId";
 
-            var propertyExpression = Reflector.GetPropertyExpression<Employee, object>(propPath);
+            var propertyExpression = Reflector.Property.GetPropertyExpression<Employee, object>(propPath);
 
             var propertyPath = Reflector.Property.GetPropertyPath(propertyExpression);
 

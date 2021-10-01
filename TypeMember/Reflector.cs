@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -12,126 +13,12 @@ namespace TypeMember
 {
     public static class Reflector
     {
-        private const BindingFlags DefaultBindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.IgnoreCase;
+        internal const BindingFlags DefaultBindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.IgnoreCase;
 
         public static ForMemberName MemberName { get; } = new();
         public static ForMemberInfo MemberInfo { get; } = new();
+        public static ForMemberType MemberType { get; } = new();
         public static ForProperty Property { get; } = new();
-
-        #region Fix Member Path Case
-
-        public static string FixMemberPathCase(Type type, string propertyName)
-        {
-            if (string.IsNullOrWhiteSpace(propertyName))
-                return null;
-
-            var parts = propertyName.Split('.');
-
-            if (parts.Length > 1)
-            {
-                var propertyInfo = type.GetProperty(parts[0], DefaultBindings);
-                return propertyInfo == null
-                    ? null
-                    : string.Concat(propertyInfo.Name, ".",
-                        FixMemberPathCase(propertyInfo.PropertyType,
-                            parts.Skip(1).Aggregate((a, i) => a + "." + i)));
-            }
-
-            var property = type.GetProperty(propertyName, DefaultBindings);
-
-            return property == null ? null : property.Name;
-        }
-
-        public static string FixMemberPathCase<TSource>(string propertyName)
-        {
-            return FixMemberPathCase(typeof(TSource), propertyName);
-        }
-
-        #endregion
-
-        public static LambdaExpression GetPropertyExpression<TSource>(string propName, Type propType)
-        {
-            var getPropertyExpression = MemberName.Get(() => GetPropertyExpression<object, object>(null));
-
-            var method = typeof(Reflector).GetMethod(
-                getPropertyExpression,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static,
-                Type.DefaultBinder,
-                new[] { typeof(string) },
-                null);
-
-            var genericMethod = method?.MakeGenericMethod(typeof(TSource), propType);
-
-            var lambdaExpression = genericMethod?.Invoke(null, new object[] { /*typeof(TSource).Name + "." +*/ propName }) as LambdaExpression;
-
-            return lambdaExpression;
-        }
-
-        public static Expression<Func<TSource, TProperty>> GetPropertyExpression<TSource, TProperty>(string propPath)
-        {
-            var split = propPath.Split('.');
-
-            // Create the root of the expression, namely accessing an employee variable. Could be a Expression.Parameter too.
-            var baseExpr = Expression.Parameter(typeof(TSource), typeof(TSource).Name.ToLowerInvariant());
-
-            // Start at index 0 (the root)
-            var result = BuildAccessors(baseExpr, split, 0);
-
-            if (result is MemberExpression memberExpression && memberExpression.Type != typeof(TProperty) && memberExpression.Type.IsValueType)
-            {
-                result = Expression.Convert(result, typeof(TProperty));
-            }
-
-            // Create the resulting lambda
-            var lambda = Expression.Lambda<Func<TSource, TProperty>>(result, baseExpr);
-
-            return lambda;
-        }
-
-        private static Expression BuildAccessors(Expression parent, string[] properties, int index)
-        {
-            if (index < properties.Length)
-            {
-                var member = properties[index];
-
-                // If it's IEnumerable like Orders is, then we need to do something more complicated
-                if (typeof(IEnumerable).IsAssignableFrom(parent.Type) && parent.Type != typeof(string))
-                {
-                    var enumerableType = parent.Type.GetGenericArguments().Single(); // input eg: Employee.Orders (type IList<Order>), output: type Order
-
-                    var param = Expression.Parameter(enumerableType, enumerableType.Name.ToLowerInvariant()); // declare parameter for the lambda expression of Orders.Select(x => x.OrderID)
-
-                    var lambdaBody = BuildAccessors(param, properties, index); // Recurse to build the inside of the lambda, so x => x.OrderID. 
-
-                    var funcType = typeof(Func<,>).MakeGenericType(enumerableType, lambdaBody.Type); // Lambda is of type Func<Order, int> in the case of x => x.OrderID
-
-                    var lambda = Expression.Lambda(funcType, lambdaBody, param);
-
-                    // This part is messy, I want to find the method Enumerable.Select<Order, int>(..) but I don't think there's a more succinct way. Might be wrong.
-                    var selectMethod = (from m in typeof(Enumerable).GetMethods()
-                        where m.Name == "Select"
-                              && m.IsGenericMethod
-                        let parameters = m.GetParameters()
-                        where parameters.Length == 2
-                              && parameters[1].ParameterType.GetGenericTypeDefinition() == typeof(Func<,>)
-                        select m).Single().MakeGenericMethod(enumerableType, lambdaBody.Type);
-
-                    // Do Orders.Select(x => x.OrderID)
-                    var invokeSelect = Expression.Call(null, selectMethod, parent, lambda);
-
-                    return invokeSelect;
-                }
-
-                // Simply access a property like OrderID
-                var newParent = Expression.PropertyOrField(parent, member);
-
-                // Recurse
-                return BuildAccessors(newParent, properties, ++index);
-            }
-
-            // Return the final expression once we're done recurring.
-            return parent;
-        }
 
         #region Change and convert types
 
@@ -562,28 +449,5 @@ namespace TypeMember
         #endregion
 
         #endregion
-
-        public static Type GetMemberType(MemberInfo memberInfo)
-        {
-            var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo != null)
-            {
-                return propertyInfo.PropertyType;
-            }
-
-            var fieldInfo = memberInfo as FieldInfo;
-            return fieldInfo?.FieldType;
-        }
-
-        public static Type GetMemberType(Expression expression)
-        {
-            if (expression is LambdaExpression lambdaExpression)
-            {
-                var memberInfo = MemberInfo.Get(lambdaExpression);
-                return GetMemberType(memberInfo);
-            }
-
-            return null;
-        }
     }
 }

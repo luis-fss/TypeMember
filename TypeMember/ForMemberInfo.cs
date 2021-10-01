@@ -9,8 +9,6 @@ namespace TypeMember
 {
     public class ForMemberInfo
     {
-        private const BindingFlags DefaultBindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.IgnoreCase;
-
         public MemberInfo Get(Type type, string propertyName)
         {
             Guard.ShouldNotBeNull(() => type);
@@ -22,18 +20,18 @@ namespace TypeMember
             {
                 MemberInfo Func(Type innerType) => Get(innerType, parts.Skip(1).Aggregate((a, i) => a + "." + i));
 
-                var propertyInfo = type.GetProperty(parts[0], DefaultBindings);
+                var propertyInfo = type.GetProperty(parts[0], Reflector.DefaultBindings);
                 if (propertyInfo != null)
                 {
                     var t = ExtractUnderlyingTypeFromGenericEnumerable(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
                     return Func(t);
                 }
 
-                var memberInfo = type.GetField(parts[0], DefaultBindings);
+                var memberInfo = type.GetField(parts[0], Reflector.DefaultBindings);
                 return memberInfo != null ? Func(memberInfo.FieldType) : null;
             }
 
-            return (MemberInfo)type.GetProperty(propertyName, DefaultBindings) ?? type.GetField(propertyName, DefaultBindings);
+            return (MemberInfo)type.GetProperty(propertyName, Reflector.DefaultBindings) ?? type.GetField(propertyName, Reflector.DefaultBindings);
         }
 
         public MemberInfo Get<TSource>(string propertyName)
