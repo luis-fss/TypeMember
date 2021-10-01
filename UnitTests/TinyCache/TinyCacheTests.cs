@@ -15,7 +15,7 @@ namespace UnitTests.TinyCache
         }
 
         [Test]
-        public void test_with_typepair()
+        public void test_with_type_pair()
         {
             var cache = GetCache().GetOrSetItem("cacheKey-{deead815-2427-4250-99ee-f687067dd01b}",
                 () => new ConcurrentDictionary<Type, string>());

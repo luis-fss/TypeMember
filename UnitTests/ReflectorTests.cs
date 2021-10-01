@@ -96,7 +96,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_property_that_does_not_exists_should_returns_null()
+        public void get_member_info_for_a_property_that_does_not_exists_should_returns_null()
         {
             //Should return null
             var memberInfo = Reflector.GetMemberInfo<Foo>("property_that_does_not_exists");
@@ -104,7 +104,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_property()
+        public void get_member_info_for_a_property()
         {
             var memberInfo = Reflector.GetMemberInfo(typeof(Foo), "Bar");
             memberInfo.Should().NotBeNull();
@@ -112,7 +112,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_property_generic()
+        public void get_member_info_for_a_property_generic()
         {
             var memberInfo = Reflector.GetMemberInfo<Foo>("Bar");
             memberInfo.Should().NotBeNull();
@@ -120,7 +120,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_property_expression()
+        public void get_member_info_for_a_property_expression()
         {
             Expression<Func<Foo, object>> expression = foo => foo.Bar;
             var memberInfo = Reflector.GetMemberInfo(expression);
@@ -129,7 +129,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_property_case_insensitive()
+        public void get_member_info_for_a_property_case_insensitive()
         {
             var memberInfo = Reflector.GetMemberInfo<Foo>("bar");
             memberInfo.Should().NotBeNull();
@@ -137,7 +137,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_nested_property()
+        public void get_member_info_for_a_nested_property()
         {
             var memberInfo = Reflector.GetMemberInfo<Foo>("Bar.Name");
             memberInfo.Should().NotBeNull();
@@ -145,7 +145,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_nested_collection()
+        public void get_member_info_for_a_nested_collection()
         {
             var memberInfo = Reflector.GetMemberInfo<Employee>("Orders.OrderID");
             memberInfo.Should().NotBeNull();
@@ -153,7 +153,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_nested_collection_2()
+        public void get_member_info_for_a_nested_collection_2()
         {
             var memberInfo = Reflector.GetMemberInfo<Employee>("Orders.Customer.City");
             memberInfo.Should().NotBeNull();
@@ -161,7 +161,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void get_memberinfo_for_a_nested_property_case_insensitive()
+        public void get_member_info_for_a_nested_property_case_insensitive()
         {
             var memberInfo = Reflector.GetMemberInfo<Foo>("bar.name");
             memberInfo.Should().NotBeNull();
@@ -229,7 +229,7 @@ namespace UnitTests
             var foo = new Foo { Bar = null };
             Reflector.SetPropertyValue(foo, "Bar.Bee.Name", barName);
             var value = Reflector.GetPropertyValue(foo, "Bar.Bee.Name");
-            foo.Bar.Bee.Name.Should().Be(barName);
+            foo.Bar?.Bee.Name.Should().Be(barName);
             value.Should().Be(barName);
         }
 

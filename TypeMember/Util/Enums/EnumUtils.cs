@@ -22,7 +22,7 @@ namespace TypeMember.Util.Enums
         public EnumUtils(Type enumType)
         {
             if (!enumType.IsEnum)
-                throw new ArgumentException(String.Format("Supplied type must be an Enum.  Type was {0}", enumType));
+                throw new ArgumentException($"Supplied type must be an Enum.  Type was {enumType}");
 
             _enumType = enumType;
         }
@@ -60,10 +60,10 @@ namespace TypeMember.Util.Enums
             foreach (var fi in _enumType.GetFields())
             {
                 //Check for our custom attribute
-                var attrs = fi.GetCustomAttributes(typeof(StringValueAttribute), false) as StringValueAttribute[];
-                if (attrs != null && attrs.Length > 0)
+                if (fi.GetCustomAttributes(typeof(StringValueAttribute), false) is StringValueAttribute[] { Length: > 0 } attrs)
+                {
                     values.Add(attrs[0].Value);
-
+                }
             }
 
             return values.ToArray();
@@ -81,10 +81,10 @@ namespace TypeMember.Util.Enums
             foreach (var fi in _enumType.GetFields())
             {
                 //Check for our custom attribute
-                var attrs = fi.GetCustomAttributes(typeof(StringValueAttribute), false) as StringValueAttribute[];
-                if (attrs != null && attrs.Length > 0)
+                if (fi.GetCustomAttributes(typeof(StringValueAttribute), false) is StringValueAttribute[] { Length: > 0 } attrs)
+                {
                     values.Add(new DictionaryEntry(Convert.ChangeType(Enum.Parse(_enumType, fi.Name), underlyingType), attrs[0].Value));
-
+                }
             }
 
             return values;
@@ -116,10 +116,7 @@ namespace TypeMember.Util.Enums
         /// Gets the underlying enum type for this instance.
         /// </summary>
         /// <value></value>
-        public Type EnumType
-        {
-            get { return _enumType; }
-        }
+        public Type EnumType => _enumType;
 
         #endregion
 
@@ -139,7 +136,9 @@ namespace TypeMember.Util.Enums
             {
                 var stringValueAttribute = StringValues[value];
                 if (stringValueAttribute != null)
+                {
                     output = stringValueAttribute.Value;
+                }
             }
             else
             {
@@ -147,27 +146,15 @@ namespace TypeMember.Util.Enums
                 // ReSharper disable SpecifyACultureInStringConversionExplicitly
                 var fi = type.GetField(value.ToString());
                 // ReSharper restore SpecifyACultureInStringConversionExplicitly
-                var attrs = fi.GetCustomAttributes(typeof(StringValueAttribute), false) as StringValueAttribute[];
-                if (attrs != null && attrs.Length > 0)
+                if (fi?.GetCustomAttributes(typeof(StringValueAttribute), false) is StringValueAttribute[] { Length: > 0 } attrs)
                 {
                     StringValues.TryAdd(value, attrs[0]);
                     output = attrs[0].Value;
                 }
 
             }
+            
             return output;
-
-        }
-
-        /// <summary>
-        /// Parses the supplied enum and string value to find an associated enum value (case sensitive).
-        /// </summary>
-        /// <param name="type">Type.</param>
-        /// <param name="stringValue">String value.</param>
-        /// <returns>Enum value associated with the string value, or null if not found.</returns>
-        public static object Parse(Type type, string stringValue)
-        {
-            return Parse(type, stringValue, false);
         }
 
         /// <summary>
@@ -177,20 +164,21 @@ namespace TypeMember.Util.Enums
         /// <param name="stringValue">String value.</param>
         /// <param name="ignoreCase">Denotes whether to conduct a case-insensitive match on the supplied string value</param>
         /// <returns>Enum value associated with the string value, or null if not found.</returns>
-        public static object Parse(Type type, string stringValue, bool ignoreCase)
+        public static object Parse(Type type, string stringValue, bool ignoreCase = false)
         {
             string enumStringValue = null;
 
             if (!type.IsEnum)
-                throw new ArgumentException(String.Format("Supplied type must be an Enum.  Type was {0}", type));
+                throw new ArgumentException($"Supplied type must be an Enum.  Type was {type}");
 
             //Look for our string value associated with fields in this enum
             foreach (var fi in type.GetFields())
             {
                 //Check for our custom attribute
-                var attrs = fi.GetCustomAttributes(typeof(StringValueAttribute), false) as StringValueAttribute[];
-                if (attrs != null && attrs.Length > 0)
+                if (fi.GetCustomAttributes(typeof(StringValueAttribute), false) is StringValueAttribute[] { Length: > 0 } attrs)
+                {
                     enumStringValue = attrs[0].Value;
+                }
 
                 //Check for equality then select actual enum value.
                 if (string.Compare(enumStringValue, stringValue, ignoreCase) != 0) continue;

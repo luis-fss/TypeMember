@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using TypeMember.Exceptions;
+using TypeMember.Internal;
 using TypeMember.TinyCache;
 using TypeMember.Util;
 
@@ -54,8 +55,6 @@ namespace TypeMember
 
         private static string GetMemberName(Expression expression)
         {
-            Guard.Guard.IsNotNull(() => expression);
-
             if (expression is MemberExpression memberExpression)
             {
                 return memberExpression.Member.Name;
@@ -81,8 +80,6 @@ namespace TypeMember
 
         private static string GetMemberName(UnaryExpression expression)
         {
-            Guard.Guard.IsNotNull(() => expression);
-
             if (expression.Operand is MethodCallExpression methodExpression)
                 return methodExpression.Method.Name;
 
@@ -107,8 +104,8 @@ namespace TypeMember
 
         public static MemberInfo GetMemberInfo(Type type, string propertyName)
         {
-            Guard.Guard.IsNotNull(() => type);
-            Guard.Guard.IsNotNull(() => propertyName);
+            Guard.ShouldNotBeNull(() => type);
+            Guard.ShouldNotBeNull(() => propertyName);
 
             var parts = propertyName.Split('.');
 
@@ -142,7 +139,7 @@ namespace TypeMember
 
         private static MemberInfo GetMemberInfo(LambdaExpression expression)
         {
-            Guard.Guard.IsNotNull(() => expression);
+            Guard.ShouldNotBeNull(() => expression);
 
             Expression expressionToCheck = expression;
 
@@ -172,7 +169,7 @@ namespace TypeMember
 
         private static Type ExtractUnderlyingTypeFromGenericEnumerable(Type type)
         {
-            Guard.Guard.IsNotNull(() => type);
+            Guard.ShouldNotBeNull(() => type);
 
             foreach (var interfaceType in type.GetInterfaces())
             {

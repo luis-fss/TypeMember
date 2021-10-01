@@ -2,12 +2,12 @@
 
 namespace TypeMember.TinyCache
 {
-    class TimedCacheItem<TItem> : IExpirable
+    internal class TimedCacheItem<TItem> : IExpirable
     {
         public virtual TItem Item { get; protected set; }
-        public int LifespanMilliseconds { get; private set; }
+        public int LifespanMilliseconds { get; }
         public DateTime ExpiryDateTime { get; protected set; }
-        public virtual bool HasExpired { get { return ExpiryDateTime <= DateTime.Now; } }
+        public virtual bool HasExpired => ExpiryDateTime <= DateTime.Now;
 
         public TimedCacheItem(TItem item, int lifespanMilliseconds)
         {

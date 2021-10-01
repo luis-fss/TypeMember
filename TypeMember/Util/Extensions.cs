@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using TypeMember.Internal;
 using TypeMember.Util.Enums;
 
 namespace TypeMember.Util
@@ -37,7 +38,9 @@ namespace TypeMember.Util
         public static HashSet<string> GetAllPropertiesPaths(this Expression expression, string collectionSuffix = null)
         {
             if (expression == null)
+            {
                 return null;
+            }
 
             var visitor = new PropertyPathVisitor { CollectionSuffix = collectionSuffix };
             visitor.Visit(expression);

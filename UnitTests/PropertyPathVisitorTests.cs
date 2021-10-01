@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using FluentAssertions;
 using NUnit.Framework;
+using TypeMember.Internal;
 using TypeMember.Util;
 using UnitTests.StubEntities;
 using UnitTests.StubEntities.Blog;
