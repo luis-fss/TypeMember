@@ -13,7 +13,7 @@ namespace TypeMember.Util.Enums
 
         private readonly Type _enumType;
         //private static readonly Hashtable StringValues = Hashtable.Synchronized(new Hashtable());
-        private static readonly ConcurrentDictionary<Enum, StringValueAttribute> StringValues = new ConcurrentDictionary<Enum, StringValueAttribute>();
+        private static readonly ConcurrentDictionary<Enum, StringValueAttribute> StringValues = new();
 
         /// <summary>
         /// Creates a new <see cref="EnumUtils"/> instance.

@@ -29,14 +29,14 @@ namespace UnitTests
         [Test]
         public void should_hydrate_a_simple_object()
         {
-            var foo = ObjectFactory.Hydrate<Foo>();
+            var foo = ObjectFactory<Foo>.Hydrate();
             foo.Bar.Should().NotBeNull();
         }
 
         [Test]
         public void should_hydrate_a_complex_object()
         {
-            var person = ObjectFactory.Hydrate<Person>();
+            var person = ObjectFactory<Person>.Hydrate();
             person.MyClassProp.Should().NotBeNull();
             person.MyClassProp.Bee.Should().NotBeNull();
             person.MyClassProp.Stub.Bee.Should().NotBeNull();

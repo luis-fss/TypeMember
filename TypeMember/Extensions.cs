@@ -32,17 +32,34 @@ namespace TypeMember
 
         public static string GetPropertyPath<T>(this T instance, Expression<Func<T, object>> expression)
         {
-            return Reflector.Property.GetPropertyPath(expression);
+            return Reflector.Property.GetPath(expression);
         }
 
         public static HashSet<string> GetAllPropertiesPaths(this object obj)
         {
-            return Reflector.Property.GetAllPropertiesPathsWithCache(obj.GetType());
+            return Reflector.Property.GetAllPaths(obj.GetType());
         }
 
         public static HashSet<string> GetAllPropertiesPaths(this Type type)
         {
-            return Reflector.Property.GetAllPropertiesPathsWithCache(type);
+            return Reflector.Property.GetAllPaths(type);
+        }
+
+        public static bool HydrateProperty(this object source, string property)
+        {
+            var result = Reflector.Property.GetReflectorResult(source, property, true, true);
+
+            return result.PreviousValue is not null;
+        }
+        
+        public static T As<T>(this object subject) where T : class
+        {
+            return subject as T;
+        }
+
+        public static T Cast<T>(this object subject)
+        {
+            return (T)subject;
         }
     }
 }
